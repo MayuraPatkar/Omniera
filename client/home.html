@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +17,7 @@
         }
 
         .header {
-            background-color: #007BFF;
+            background-color: #aa00ff;
             color: white;
             padding: 15px;
             text-align: center;
@@ -47,13 +48,11 @@
             justify-content: flex-end;
             background-color: #ffffff;
             flex-grow: 1;
-            margin: 0 20px;
-            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
-        .messages {
+        .chat-box {
             padding: 20px;
             height: 400px;
             overflow-y: auto;
@@ -66,10 +65,25 @@
             width: fit-content;
         }
 
-        .user-message {
-            background-color: #007BFF;
+        .ai-message {
+            width: 90%;
+            background-color: #0056b3;
+            padding: 1%;
+            border-radius: 10px;
             color: white;
-            align-self: flex-end;
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .user-message {
+            width: 90%;
+            text-align: right;
+            background-color: #6b00b3;
+            padding: 1%;
+            border-radius: 10px;
+            color: white;
+            display: flex;
+            margin-bottom: 10px;
         }
 
         .bot-message {
@@ -78,7 +92,7 @@
             align-self: flex-start;
         }
 
-        .chat-input {
+        #chat-input {
             padding: 10px;
             display: flex;
             justify-content: space-between;
@@ -91,10 +105,11 @@
             padding: 10px;
             border: none;
             border-radius: 5px;
+
         }
 
         .send-btn {
-            background-color: #007BFF;
+            background-color: #7614fe;
             color: white;
             padding: 10px;
             border: none;
@@ -108,30 +123,105 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="header">
-    <h1>Chatbot</h1>
-    <a href="#" class="profile-btn">Profile</a>
-</div>
+    <div class="header">
+        <h1>Chatbot</h1>
+        <a href="#" class="profile-btn">Profile</a>
+    </div>
 
-<div class="chat-container">
-    <div class="messages">
-        <div class="message bot-message">
-            Hello! How can I help you today?
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <p id="h2">How can I help you today?</p>
         </div>
-        <div class="message user-message">
-            Can you tell me more about your services?
-        </div>
-        <div class="message bot-message">
-            Sure! I can assist you with information, problem-solving, and much more.
-        </div>
+        <form id="chat-input">
+            <input type="text" id="user_input" placeholder="Type your message...">
+            <button class="send-btn" type="submit">Generate</button>
+        </form>
     </div>
-    <div class="chat-input">
-        <input type="text" placeholder="Type your message...">
-        <button class="send-btn">Send</button>
-    </div>
-</div>
 
 </body>
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const form = document.getElementById('chat-input');
+    const user_input = document.getElementById('user_input');
+
+    form.addEventListener('submit', function (event) {
+        if (user_input.value) {
+            const h2 = document.getElementById('h2');
+            if (h2)
+                h2.style.display = 'none';
+            event.preventDefault();
+            handleFormSubmit();
+        }
+    });
+
+    function loadChatHistory() {
+        fetch('/get_chat_history/', {
+            method: 'POST'
+        })
+            .then(response => response.json())
+            .then(data => {
+                const chatHistoryDiv = document.getElementById('chat-box');
+                const h2 = document.getElementById('h2');
+                h2.style.display = 'block';
+                if (data != "") {
+                    chatHistoryDiv.innerHTML = '';
+                    data.forEach(chat => {
+                        appendMessage('user', chat.prompt);
+                        appendMessage('ai', chat.response);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching chat history:', error);
+            });
+    }
+
+    function handleFormSubmit() {
+        const prompt = document.getElementById('user_input').value.trim();
+
+        if (prompt) {
+            const formData = new FormData();
+            formData.append('prompt', prompt);
+            appendMessage('user', prompt);
+            sendPrompt(formData);
+        }
+
+        document.getElementById('user_input').value = '';
+
+    }
+
+    function sendPrompt(formData) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:3000/ai-response/');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                appendMessage('ai', response.response);
+            } else {
+                console.error('Request failed. Status: ' + xhr.status);
+            }
+        };
+        xhr.send(formData);
+
+    }
+
+    function appendMessage(sender, message) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add(sender + '-message');
+
+        if (sender == "user") {
+            messageElement.innerHTML = "<p>You: " + message + "</p>";
+        } else {
+            messageElement.innerHTML = "<p>T-MLM: " + message + "</p>";
+        }
+
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+</script>
+
 </html>
