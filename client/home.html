@@ -3,10 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chatbot Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            background-color: #007BFF;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background-color: white;
+            color: #007BFF;
+            border: 2px solid white;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .profile-btn:hover {
+            background-color: #f4f4f4;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background-color: #ffffff;
+            flex-grow: 1;
+            margin: 0 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .messages {
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            width: fit-content;
+        }
+
+        .user-message {
+            background-color: #007BFF;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background-color: #f4f4f4;
+            color: #333;
+            align-self: flex-start;
+        }
+
+        .chat-input {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            background-color: #eee;
+            border-top: 1px solid #ccc;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .send-btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            border-radius: 5px;
+        }
+
+        .send-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <p> hi this my neew programs
-    </p>
+
+<div class="header">
+    <h1>Chatbot</h1>
+    <a href="#" class="profile-btn">Profile</a>
+</div>
+
+<div class="chat-container">
+    <div class="messages">
+        <div class="message bot-message">
+            Hello! How can I help you today?
+        </div>
+        <div class="message user-message">
+            Can you tell me more about your services?
+        </div>
+        <div class="message bot-message">
+            Sure! I can assist you with information, problem-solving, and much more.
+        </div>
+    </div>
+    <div class="chat-input">
+        <input type="text" placeholder="Type your message...">
+        <button class="send-btn">Send</button>
+    </div>
+</div>
+
 </body>
 </html>

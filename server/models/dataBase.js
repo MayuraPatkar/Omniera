@@ -13,4 +13,13 @@ mongoose
 
 const db = mongoose.connection;
 
-module.exports = { db }
+const accountSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    password: String,
+    session: String,
+  });
+  
+  const accounts = mongoose.model("accounts", accountSchema);
+
+module.exports = { db, accounts}
