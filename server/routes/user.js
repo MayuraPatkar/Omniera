@@ -1,15 +1,16 @@
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const { db, accounts } = require("../models/dataBase");
+const { db, accounts, allUserChats, chatHistory } = require("../models/dataBase");
 const bcrypt = require('bcrypt');
 const { spawn } = require('child_process');
-
-const pythonProcess = spawn('python', ['response.py']);
-
+const multer = require('multer');
+const upload = multer();
+const { v4: uuidv4 } = require('uuid');
 
 const router = express.Router();
 router.use(cookieParser());
+router.use(express.json())
 
 // GET '/'
 router.get("/", (req, res) => {
@@ -19,9 +20,9 @@ router.get("/", (req, res) => {
             .then((user) => {
                 if (user) {
                     if (sessionString === user.session) {
-                        res.sendFile(path.join(__dirname, '../../client/home.html'));
+                        res.sendFile(path.join(__dirname, '../../client/dashboard.html'));
                     } else {
-                        res.sendFile(path.join(__dirname, '../../client/landing.html'));
+                        res.sendFile(path.join(__dirname, '../../client/landingpage.html'));
                     }
                 } else {
                     res.sendFile(path.join(__dirname, '../../client/landingpage.html'));
@@ -34,6 +35,11 @@ router.get("/", (req, res) => {
     } else {
         res.sendFile(path.join(__dirname, '../../client/landingpage.html'));
     }
+});
+
+//GET '/newchat'
+router.get('/newchat', (req, res) => {
+    res.render('chat', { session: chatHistory.session });
 });
 
 // GET '/login'
@@ -136,8 +142,25 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.post("/ai-response", (req, res) => {
-    const prompt = req.body;
+router.post("/ai-response", upload.none(), async (req, res) => {
+    const sessionString = req.cookies.sessionToken;
+
+    let userId = null;
+
+    // Fetch user by session token
+    if (sessionString) {
+        try {
+            const user = await accounts.findOne({ session: sessionString });
+            if (user) {
+                userId = user._id;
+            }
+        } catch (error) {
+            console.error("Error finding user:", error);
+            return res.status(500).json({ status: "error", message: "User lookup failed" });
+        }
+    }
+
+    const { conversationTitle, prompt } = req.body;
     const pythonProcess = spawn('python', [path.join(__dirname, '../../server/T-MLM/response.py'), JSON.stringify(prompt)]);
 
     let result = '';
@@ -150,21 +173,202 @@ router.post("/ai-response", (req, res) => {
         console.error(`stderr: ${data}`);
     });
 
-    pythonProcess.on('close', (code) => {
+    pythonProcess.on('close', async (code) => {
         if (code !== 0) {
             return res.status(500).json({ status: "error", message: "Python process failed" });
         }
         try {
             const jsonResponse = JSON.parse(result);
-            return res.status(200).json({
-                status: "success",
-                response: jsonResponse,
-            });
+
+            if (jsonResponse) {
+                try {
+                    // Check if chat session already exists or create a new one
+                    let chatSession = await allUserChats.findOne({ user: userId, "conversation.title": conversationTitle });
+
+                    if (!chatSession) {
+                        // Generate unique session ID
+                        const sessionId = uuidv4(); // Unique session for each chat
+
+                        // Create new chat session
+                        chatSession = new allUserChats({
+                            user: userId,
+                            session: sessionId, // Store unique session
+                            conversation: {
+                                title: conversationTitle,
+                                time: new Date(),
+                            },
+                        });
+                        await chatSession.save();
+                    }
+
+                    // Save chat history
+                    const newChatHistory = new chatHistory({
+                        user: userId,
+                        chat: chatSession._id,
+                        conversation: {
+                            user: prompt,
+                            ai: jsonResponse,
+                        },
+                        time: new Date(),
+                    });
+
+                    await newChatHistory.save();
+
+                    // Respond to the client
+                    return res.status(200).json({
+                        status: "success",
+                        response: jsonResponse,
+                    });
+
+                } catch (dbError) {
+                    console.error("Error saving to the database:", dbError);
+                    return res.status(500).json({ status: "error", message: "Database save error" });
+                }
+            } else {
+                console.log("No AI response");
+            }
         } catch (error) {
+            console.error("Invalid JSON response:", error);
             return res.status(500).json({ status: "error", message: "Invalid JSON response" });
         }
     });
 });
+
+router.get("/chat-history", async (req, res) => {
+    const sessionString = req.cookies.sessionToken;
+    let userId = null;
+
+    if (sessionString) {
+        try {
+            const user = await accounts.findOne({ session: sessionString });
+            if (user) {
+                userId = user._id;
+            } else {
+                return res.status(404).json({ status: "error", message: "User not found" });
+            }
+        } catch (error) {
+            return res.status(500).json({ status: "error", message: "Error finding user" });
+        }
+    }
+
+    try {
+        const chats = await allUserChats.find({ user: userId }).sort({ "conversation.time": -1 });
+        return res.status(200).json({ status: "success", chats });
+    } catch (error) {
+        return res.status(500).json({ status: "error", message: "Error fetching chat history" });
+    }
+});
+
+router.post('/get_chat_history/', async (req, res) => {
+    const sessionString = req.cookies.sessionToken;
+
+    // Validate the session
+    if (!sessionString) {
+        return res.status(401).json({ status: "error", message: "Unauthorized" });
+    }
+
+    let userId = null;
+
+    // Fetch user by session token
+    try {
+        const user = await accounts.findOne({ session: sessionString });
+        if (user) {
+            userId = user._id;
+        } else {
+            return res.status(404).json({ status: "error", message: "User not found" });
+        }
+    } catch (error) {
+        console.error("Error finding user:", error);
+        return res.status(500).json({ status: "error", message: "User lookup failed" });
+    }
+
+    const session = req.body.session; // Make sure to extract session from the body
+
+    try {
+        // Fetch chat session for the given session ID
+        const chatSession = await allUserChats.findOne({ session, user: userId });
+
+        if (!chatSession) {
+            return res.status(404).json({ status: "error", message: "Chat session not found" });
+        }
+
+        // Get chat history for the chat session
+        const history = await chatHistory.find({ chat: chatSession._id }).sort({ time: -1 });
+
+        // Respond with formatted chat history
+        const formattedHistory = history.map(chat => ({
+            prompt: chat.conversation.user,
+            response: chat.conversation.ai,
+        }));
+
+        return res.status(200).json(formattedHistory);
+    } catch (error) {
+        console.error("Error fetching chat history:", error);
+        return res.status(500).json({ status: "error", message: "Error fetching chat history" });
+    }
+});
+
+// Logout endpoint
+router.post('/logout', (req, res) => {
+    res.clearCookie('sessionToken');
+    return res.status(200).json({ status: "success", message: "Logged out successfully." });
+});
+
+// Delete account endpoint
+router.post('/kill-account', async (req, res) => {
+    const sessionString = req.cookies.sessionToken;
+
+    if (!sessionString) {
+        return res.status(401).json({ status: "error", message: "Unauthorized" });
+    }
+
+    try {
+        const user = await accounts.findOne({ session: sessionString });
+
+        if (!user) {
+            return res.status(404).json({ status: "error", message: "User not found" });
+        }
+
+        // Delete user's account and associated data
+        await accounts.deleteOne({ _id: user._id });
+        await allUserChats.deleteMany({ user: user._id });
+        await chatHistory.deleteMany({ user: user._id });
+
+        // Clear the session cookie
+        res.clearCookie('sessionToken');
+
+        return res.status(200).json({ status: "success", message: "Account deleted successfully." });
+    } catch (error) {
+        console.error("Error deleting account:", error);
+        return res.status(500).json({ status: "error", message: "Internal server error" });
+    }
+});
+
+
+router.get('/chat/:session', async (req, res) => {
+    try {
+        const chatSessionId = req.params.session; // Correct naming for session param
+        const sessionString = req.cookies.sessionToken;
+
+        const loggedInUser = await accounts.findOne({ session: sessionString });
+        const chatHistory = await allUserChats.findOne({ session: chatSessionId });
+
+        // Ensure both the user is logged in and the chat session exists
+        if (loggedInUser && chatHistory) {
+            // Render the chat page and pass the conversation title
+            res.render('chat', { session: chatHistory.session });
+        } else {
+            // If no chat history or user is not logged in, render "not found" page
+            res.render("notfound");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
+});
+
+
+
 
 // Function to generate session token
 function generateSession() {

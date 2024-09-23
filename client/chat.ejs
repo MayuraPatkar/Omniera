@@ -4,8 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Home</title>
+    <title>new chat</title>
     <style>
+        @font-face {
+            font-family: 'Pixelify Sans';
+            src: url("../client/fonts/Pixelify_Sans/static/PixelifySans-Medium.woff2") format('woff2'),
+                url("../client/fonts/Pixelify_Sans/static/PixelifySans-Medium.ttf") format('truetype');
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -14,14 +20,22 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            width: 100vw;
         }
 
         .header {
+            height: 10vh;
             background-color: #aa00ff;
             color: white;
-            padding: 15px;
             text-align: center;
-            position: relative;
+        }
+
+        .header .title {
+            background: none;
+            width: fit-content;
+            border: none;
+            font-size: 2rem;
+            text-align: center;
         }
 
         .profile-btn {
@@ -54,8 +68,15 @@
 
         .chat-box {
             padding: 20px;
-            height: 400px;
+            height: 100%px;
             overflow-y: auto;
+        }
+
+        .chat-box .mp {
+            font-size: 3rem;
+            text-align: center;
+            margin: auto;
+            font-family: "Pixelify Sans", sans-serif;
         }
 
         .message {
@@ -95,15 +116,15 @@
         #chat-input {
             padding: 10px;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             background-color: #eee;
             border-top: 1px solid #ccc;
         }
 
         input[type="text"] {
-            width: 100%;
+            width: 70%;
             padding: 10px;
-            border: none;
+            border: 1px solid black;
             border-radius: 5px;
 
         }
@@ -114,7 +135,6 @@
             padding: 10px;
             border: none;
             cursor: pointer;
-            margin-left: 10px;
             border-radius: 5px;
         }
 
@@ -127,16 +147,16 @@
 <body>
 
     <div class="header">
-        <h1>Chatbot</h1>
+        <input type="text" class="title" id="title" value="New Chat 1" autocomplete="off">
         <a href="#" class="profile-btn">Profile</a>
     </div>
 
     <div class="chat-container">
         <div class="chat-box" id="chat-box">
-            <p id="h2">How can I help you today?</p>
+            <p id="h2" class="mp">How can I help you today?</p>
         </div>
         <form id="chat-input">
-            <input type="text" id="user_input" placeholder="Type your message...">
+            <input type="text" id="user_input" placeholder="Type your message..." autocomplete="off">
             <button class="send-btn" type="submit">Generate</button>
         </form>
     </div>
@@ -146,6 +166,7 @@
     const chatBox = document.getElementById('chat-box');
     const form = document.getElementById('chat-input');
     const user_input = document.getElementById('user_input');
+    const chat_title = document.getElementById('title');
 
     form.addEventListener('submit', function (event) {
         if (user_input.value) {
@@ -156,17 +177,26 @@
             handleFormSubmit();
         }
     });
+    const session = "<%= session %>";
 
     function loadChatHistory() {
+
+
         fetch('/get_chat_history/', {
-            method: 'POST'
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Specify content type
+            },
+            body: JSON.stringify({ session }), // Ensure session is properly formatted as JSON
         })
+
             .then(response => response.json())
             .then(data => {
                 const chatHistoryDiv = document.getElementById('chat-box');
                 const h2 = document.getElementById('h2');
                 h2.style.display = 'block';
-                if (data != "") {
+
+                if (data.length > 0) {  // Check if data array is not empty
                     chatHistoryDiv.innerHTML = '';
                     data.forEach(chat => {
                         appendMessage('user', chat.prompt);
@@ -178,19 +208,28 @@
                 console.error('Error fetching chat history:', error);
             });
     }
+    if (session) {
+        loadChatHistory();
+    }
 
-    function handleFormSubmit() {
+
+
+
+    function handleFormSubmit(event) {
+        // event.preventDefault();  // Prevent form submission from reloading the page
         const prompt = document.getElementById('user_input').value.trim();
+        const title = chat_title.value;
 
         if (prompt) {
             const formData = new FormData();
+            formData.append('conversationTitle', title);
             formData.append('prompt', prompt);
             appendMessage('user', prompt);
             sendPrompt(formData);
+            document.getElementById('user_input').value = '';
+        } else {
+            console.error('Prompt is empty!');
         }
-
-        document.getElementById('user_input').value = '';
-
     }
 
     function sendPrompt(formData) {

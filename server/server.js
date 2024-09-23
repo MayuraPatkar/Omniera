@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const app = require('./app');
 const { EventEmitter } = require('events');
+const path = require("path");
 const PORT = process.env.PORT || 3000;
 
 const busEmitter = new EventEmitter();
@@ -10,6 +11,9 @@ for (let i = 0; i < 15; i++) {
     console.log('Exit listener', i + 1);
   });
 }
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "../client"));
 
 // DATABASE CONNECTION
 const DB_URI = 'mongodb://127.0.0.1:27017/test';

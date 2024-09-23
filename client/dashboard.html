@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            background-color: #aa00ff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background-color: white;
+            color: #007BFF;
+            border: 2px solid white;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .profile-btn:hover {
+            background-color: #f4f4f4;
+        }
+
+        .dashboard {
+            width: 100vw;
+            display: flex;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+            box-sizing: border-box;
+            padding: 5%;
+        }
+
+        .dashboard div {
+            width: 25vw;
+            height: 15vh;
+            border: #007BFF 3px solid;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard div:hover {
+            background-color: rgb(231, 231, 231);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>QuantumConvo</h1>
+        <a href="#" class="profile-btn">Profile</a>
+    </div>
+
+    <div class="dashboard">
+        <div>
+            <h2 onclick="window.location='/newchat'">New Conversation</h2>
+        </div>
+    </div>
+
+</body>
+<script>
+    window.onload = async function () {
+        try {
+            const response = await fetch("/chat-history");
+            const data = await response.json();
+
+            if (data.status === "success") {
+                const dashboard = document.querySelector('.dashboard');
+
+                // Clear existing elements except for the "New Conversation" div
+                dashboard.innerHTML = '<div onclick="window.location=\'/newchat\'"><h2>New Conversation</h2></div>';
+
+                data.chats.forEach((chat, index) => {
+                    const historyDiv = document.createElement('div');
+                    const lastModified = new Date(chat.conversation.time).toLocaleString();
+
+                    historyDiv.innerHTML = `
+                        <h2>${chat.conversation.title}</h2>
+                        <p>Last modified: ${lastModified}</p>
+                    `;
+                    historyDiv.onclick = () => window.location = `/chat/${chat.session}`;
+                    dashboard.appendChild(historyDiv);
+                });
+            } else {
+                console.error('Error fetching chat history:', data.message);
+            }
+        } catch (error) {
+            console.error('Failed to fetch chat history:', error);
+        }
+    }
+</script>
+
+
+</html>
