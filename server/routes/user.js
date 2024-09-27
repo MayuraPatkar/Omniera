@@ -7,10 +7,11 @@ const { spawn } = require('child_process');
 const multer = require('multer');
 const upload = multer();
 const { v4: uuidv4 } = require('uuid');
-
 const router = express.Router();
+
 router.use(cookieParser());
 router.use(express.json())
+
 
 // GET '/'
 router.get("/", (req, res) => {
@@ -37,20 +38,24 @@ router.get("/", (req, res) => {
     }
 });
 
+
 //GET '/newchat'
 router.get('/newchat', (req, res) => {
     res.render('chat', { session: chatHistory.session });
 });
+
 
 // GET '/login'
 router.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../../client/login.html'));
 });
 
+
 // GET '/signup'
 router.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '../../client/signup.html'));
 });
+
 
 // Handle sign-up
 router.post('/signup', async (req, res) => {
@@ -98,6 +103,7 @@ router.post('/signup', async (req, res) => {
     }
 });
 
+
 // Handle login
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
@@ -142,12 +148,13 @@ router.post("/login", async (req, res) => {
     }
 });
 
+
+//HANDLE AI RESPONSE
 router.post("/ai-response", upload.none(), async (req, res) => {
     const sessionString = req.cookies.sessionToken;
 
     let userId = null;
 
-    // Fetch user by session token
     if (sessionString) {
         try {
             const user = await accounts.findOne({ session: sessionString });
@@ -182,17 +189,16 @@ router.post("/ai-response", upload.none(), async (req, res) => {
 
             if (jsonResponse) {
                 try {
-                    // Check if chat session already exists or create a new one
+                    // if chat session already exists or create a new one
                     let chatSession = await allUserChats.findOne({ user: userId, "conversation.title": conversationTitle });
 
                     if (!chatSession) {
-                        // Generate unique session ID
                         const sessionId = uuidv4(); // Unique session for each chat
 
-                        // Create new chat session
+                        // new chat session
                         chatSession = new allUserChats({
                             user: userId,
-                            session: sessionId, // Store unique session
+                            session: sessionId,
                             conversation: {
                                 title: conversationTitle,
                                 time: new Date(),
@@ -234,6 +240,8 @@ router.post("/ai-response", upload.none(), async (req, res) => {
     });
 });
 
+
+//HANDLE LOAD ALL CHATS
 router.get("/chat-history", async (req, res) => {
     const sessionString = req.cookies.sessionToken;
     let userId = null;
@@ -259,17 +267,17 @@ router.get("/chat-history", async (req, res) => {
     }
 });
 
+
+//HANDLE LOAD CHAT-HISTORY 
 router.post('/get_chat_history/', async (req, res) => {
     const sessionString = req.cookies.sessionToken;
 
-    // Validate the session
     if (!sessionString) {
         return res.status(401).json({ status: "error", message: "Unauthorized" });
     }
 
     let userId = null;
 
-    // Fetch user by session token
     try {
         const user = await accounts.findOne({ session: sessionString });
         if (user) {
@@ -282,20 +290,17 @@ router.post('/get_chat_history/', async (req, res) => {
         return res.status(500).json({ status: "error", message: "User lookup failed" });
     }
 
-    const session = req.body.session; // Make sure to extract session from the body
+    const session = req.body.session;
 
     try {
-        // Fetch chat session for the given session ID
         const chatSession = await allUserChats.findOne({ session, user: userId });
 
         if (!chatSession) {
             return res.status(404).json({ status: "error", message: "Chat session not found" });
         }
-
-        // Get chat history for the chat session
         const history = await chatHistory.find({ chat: chatSession._id }).sort({ time: -1 });
 
-        // Respond with formatted chat history
+        // Respond 
         const formattedHistory = history.map(chat => ({
             prompt: chat.conversation.user,
             response: chat.conversation.ai,
@@ -308,13 +313,15 @@ router.post('/get_chat_history/', async (req, res) => {
     }
 });
 
-// Logout endpoint
+
+// LOGOUT ENDPOINT
 router.post('/logout', (req, res) => {
     res.clearCookie('sessionToken');
     return res.status(200).json({ status: "success", message: "Logged out successfully." });
 });
 
-// Delete account endpoint
+
+// KILL ACCOUNT
 router.post('/kill-account', async (req, res) => {
     const sessionString = req.cookies.sessionToken;
 
@@ -329,7 +336,6 @@ router.post('/kill-account', async (req, res) => {
             return res.status(404).json({ status: "error", message: "User not found" });
         }
 
-        // Delete user's account and associated data
         await accounts.deleteOne({ _id: user._id });
         await allUserChats.deleteMany({ user: user._id });
         await chatHistory.deleteMany({ user: user._id });
@@ -345,20 +351,18 @@ router.post('/kill-account', async (req, res) => {
 });
 
 
+//HANDLE LOAD CHAT PAGE
 router.get('/chat/:session', async (req, res) => {
     try {
-        const chatSessionId = req.params.session; // Correct naming for session param
+        const chatSessionId = req.params.session;
         const sessionString = req.cookies.sessionToken;
 
         const loggedInUser = await accounts.findOne({ session: sessionString });
         const chatHistory = await allUserChats.findOne({ session: chatSessionId });
 
-        // Ensure both the user is logged in and the chat session exists
         if (loggedInUser && chatHistory) {
-            // Render the chat page and pass the conversation title
             res.render('chat', { session: chatHistory.session });
         } else {
-            // If no chat history or user is not logged in, render "not found" page
             res.render("notfound");
         }
     } catch (error) {
@@ -366,8 +370,6 @@ router.get('/chat/:session', async (req, res) => {
         res.status(500).send('Internal server error');
     }
 });
-
-
 
 
 // Function to generate session token
@@ -395,6 +397,7 @@ function generateSession() {
             });
     });
 }
+
 
 // 404 Page Not Found Middleware
 router.use((req, res, next) => {
