@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>new chat</title>
     <style>
-        @font-face {
+        /* @font-face {
             font-family: 'Pixelify Sans';
             src: url("../client/fonts/Pixelify_Sans/static/PixelifySans-Medium.woff2") format('woff2'),
                 url("../client/fonts/Pixelify_Sans/static/PixelifySans-Medium.ttf") format('truetype');
-        }
+        } */
 
         body {
             font-family: Arial, sans-serif;
@@ -88,10 +88,10 @@
 
         .ai-message {
             width: 90%;
-            background-color: #0056b3;
+            /* background-color: #0056b3; */
             padding: 1%;
             border-radius: 10px;
-            color: white;
+            color: rgb(0, 0, 0);
             display: flex;
             margin-bottom: 10px;
         }
@@ -99,10 +99,10 @@
         .user-message {
             width: 90%;
             text-align: right;
-            background-color: #6b00b3;
+            /* background-color: #6b00b3; */
             padding: 1%;
             border-radius: 10px;
-            color: white;
+            color: rgb(0, 0, 0);
             display: flex;
             margin-bottom: 10px;
         }
@@ -166,7 +166,6 @@
     const chatBox = document.getElementById('chat-box');
     const form = document.getElementById('chat-input');
     const user_input = document.getElementById('user_input');
-    const chat_title = document.getElementById('title');
 
     form.addEventListener('submit', function (event) {
         if (user_input.value) {
@@ -177,37 +176,71 @@
             handleFormSubmit();
         }
     });
+
     const session = "<%= session %>";
 
+    const chat_title = document.getElementById('title');
+    chat_title.addEventListener('blur', () => {
+        const newTitle = chat_title.value.trim();
+
+        if (newTitle) {
+            const sessionId = window.location.pathname.split('/').pop();
+
+            fetch('http://localhost:3000/update-title', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    sessionId: sessionId,
+                    newTitle: newTitle
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        console.error('Failed to update title');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating title:', error);
+                });
+        } else {
+            console.error('Title cannot be empty');
+        }
+    });
+
+
     function loadChatHistory() {
-
-
         fetch('/get_chat_history/', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', // Specify content type
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ session }), // Ensure session is properly formatted as JSON
+            body: JSON.stringify({ session }),  // Assuming session is defined
         })
-
             .then(response => response.json())
             .then(data => {
                 const chatHistoryDiv = document.getElementById('chat-box');
                 const h2 = document.getElementById('h2');
-                h2.style.display = 'block';
 
-                if (data.length > 0) {  // Check if data array is not empty
-                    chatHistoryDiv.innerHTML = '';
-                    data.forEach(chat => {
+                h2.style.display = 'block';
+                chat_title.value = data.title;
+                chatHistoryDiv.innerHTML = '';
+
+                if (data.history && data.history.length > 0) {
+                    data.history.forEach(chat => {
                         appendMessage('user', chat.prompt);
                         appendMessage('ai', chat.response);
                     });
+                } else {
+                    console.log('No chat history available');
                 }
             })
             .catch(error => {
                 console.error('Error fetching chat history:', error);
             });
     }
+
     if (session) {
         loadChatHistory();
     }
@@ -218,12 +251,18 @@
     function handleFormSubmit(event) {
         // event.preventDefault();  // Prevent form submission from reloading the page
         const prompt = document.getElementById('user_input').value.trim();
-        const title = chat_title.value;
+        const title = document.getElementById('title').value;
 
         if (prompt) {
+            // Extract chatSessionId from the URL
+            const urlPath = window.location.pathname;
+            const chatSessionId = urlPath.split('/').pop();
+
             const formData = new FormData();
             formData.append('conversationTitle', title);
             formData.append('prompt', prompt);
+            formData.append('chatSessionId', chatSessionId);
+
             appendMessage('user', prompt);
             sendPrompt(formData);
             document.getElementById('user_input').value = '';
@@ -232,20 +271,31 @@
         }
     }
 
+
     function sendPrompt(formData) {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://localhost:3000/ai-response/');
+
         xhr.onload = function () {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 appendMessage('ai', response.response);
+
+                // Only update the URL if session isn't already in the URL
+                if (!window.location.pathname.includes(response.sessionId)) {
+                    const newUrl = `/chat/${response.sessionId}`;
+                    // Use replaceState to avoid adding to history
+                    window.history.replaceState({ path: newUrl }, '', newUrl);
+                }
             } else {
                 console.error('Request failed. Status: ' + xhr.status);
             }
         };
-        xhr.send(formData);
 
+        xhr.send(formData);
     }
+
+
 
     function appendMessage(sender, message) {
         const messageElement = document.createElement('div');
@@ -254,7 +304,7 @@
         if (sender == "user") {
             messageElement.innerHTML = "<p>You: " + message + "</p>";
         } else {
-            messageElement.innerHTML = "<p>T-MLM: " + message + "</p>";
+            messageElement.innerHTML = "<p>Omnira: " + message + "</p>";
         }
 
         chatBox.appendChild(messageElement);

@@ -7,6 +7,7 @@ const { spawn } = require('child_process');
 const multer = require('multer');
 const upload = multer();
 const { v4: uuidv4 } = require('uuid');
+const { title } = require("process");
 const router = express.Router();
 
 router.use(cookieParser());
@@ -40,7 +41,7 @@ router.get("/", (req, res) => {
 
 
 //GET '/newchat'
-router.get('/newchat', (req, res) => {
+router.get('/chat', (req, res) => {
     res.render('chat', { session: chatHistory.session });
 });
 
@@ -148,11 +149,9 @@ router.post("/login", async (req, res) => {
     }
 });
 
-
-//HANDLE AI RESPONSE
+// HANDLE AI RESPONSE AND DB 
 router.post("/ai-response", upload.none(), async (req, res) => {
     const sessionString = req.cookies.sessionToken;
-
     let userId = null;
 
     if (sessionString) {
@@ -167,8 +166,8 @@ router.post("/ai-response", upload.none(), async (req, res) => {
         }
     }
 
-    const { conversationTitle, prompt } = req.body;
-    const pythonProcess = spawn('python', [path.join(__dirname, '../../server/T-MLM/response.py'), JSON.stringify(prompt)]);
+    const { conversationTitle, prompt, chatSessionId } = req.body;
+    const pythonProcess = spawn('python', [path.join(__dirname, '../../server/T-CLM2/response.py'), JSON.stringify(prompt)]);
 
     let result = '';
 
@@ -184,61 +183,89 @@ router.post("/ai-response", upload.none(), async (req, res) => {
         if (code !== 0) {
             return res.status(500).json({ status: "error", message: "Python process failed" });
         }
+
         try {
             const jsonResponse = JSON.parse(result);
 
-            if (jsonResponse) {
-                try {
-                    // if chat session already exists or create a new one
-                    let chatSession = await allUserChats.findOne({ user: userId, "conversation.title": conversationTitle });
-
-                    if (!chatSession) {
-                        const sessionId = uuidv4(); // Unique session for each chat
-
-                        // new chat session
-                        chatSession = new allUserChats({
-                            user: userId,
-                            session: sessionId,
-                            conversation: {
-                                title: conversationTitle,
-                                time: new Date(),
-                            },
-                        });
-                        await chatSession.save();
-                    }
-
-                    // Save chat history
-                    const newChatHistory = new chatHistory({
-                        user: userId,
-                        chat: chatSession._id,
-                        conversation: {
-                            user: prompt,
-                            ai: jsonResponse,
-                        },
-                        time: new Date(),
-                    });
-
-                    await newChatHistory.save();
-
-                    // Respond to the client
-                    return res.status(200).json({
-                        status: "success",
-                        response: jsonResponse,
-                    });
-
-                } catch (dbError) {
-                    console.error("Error saving to the database:", dbError);
-                    return res.status(500).json({ status: "error", message: "Database save error" });
-                }
-            } else {
-                console.log("No AI response");
+            if (!jsonResponse) {
+                return res.status(500).json({ status: "error", message: "No AI response" });
             }
+
+            // Chat session handling
+            let chatSession;
+            let sessionId;
+            if (chatSessionId == "chat") {
+                sessionId = uuidv4(); // Unique session for each chat
+
+                // New chat session
+                chatSession = new allUserChats({
+                    user: userId,
+                    session: sessionId,
+                    conversation: {
+                        title: conversationTitle,
+                        time: new Date(),
+                    },
+                });
+
+                await chatSession.save();
+            } else {
+                chatSession = await allUserChats.findOne({ session: chatSessionId });
+                if (!chatSession) {
+                    return res.status(404).json({ status: "error", message: "Chat session not found" });
+                }
+            }
+
+            // Save chat history
+            const newChatHistory = new chatHistory({
+                user: userId,
+                chat: chatSession._id,
+                title: conversationTitle,
+                conversation: {
+                    user: prompt,
+                    ai: jsonResponse,
+                },
+                time: new Date(),
+            });
+
+            await newChatHistory.save();
+
+            // Respond to the client
+            return res.status(200).json({
+                status: "success",
+                response: jsonResponse,
+                sessionId: chatSession.session,
+            });
+
         } catch (error) {
-            console.error("Invalid JSON response:", error);
-            return res.status(500).json({ status: "error", message: "Invalid JSON response" });
+            console.error("Error handling AI response or saving chat:", error);
+            return res.status(500).json({ status: "error", message: "Error processing AI response" });
         }
     });
 });
+
+
+//HANDLE TITLE
+router.post('/update-title', async (req, res) => {
+    const { sessionId, newTitle } = req.body;
+
+    try {
+        // Update the title in the database based on sessionId
+        const chatSession = await allUserChats.findOneAndUpdate(
+            { session: sessionId },
+            { $set: { 'conversation.title': newTitle } }
+        );
+
+        if (!chatSession) {
+            return res.status(404).json({ status: 'error', message: 'Chat session not found' });
+        }
+
+        res.status(200).json({ status: 'success', message: 'Title updated' });
+    } catch (error) {
+        console.error('Error updating title:', error);
+        res.status(500).json({ status: 'error', message: 'Failed to update title' });
+    }
+});
+
 
 
 //HANDLE LOAD ALL CHATS
@@ -298,20 +325,56 @@ router.post('/get_chat_history/', async (req, res) => {
         if (!chatSession) {
             return res.status(404).json({ status: "error", message: "Chat session not found" });
         }
+
         const history = await chatHistory.find({ chat: chatSession._id }).sort({ time: -1 });
 
-        // Respond 
+        // Format the chat history
         const formattedHistory = history.map(chat => ({
             prompt: chat.conversation.user,
             response: chat.conversation.ai,
         }));
 
-        return res.status(200).json(formattedHistory);
+        // Respond with chat history and the title
+        return res.status(200).json({
+            status: "success",
+            title: chatSession.conversation.title,
+            history: formattedHistory,
+        });
+
     } catch (error) {
         console.error("Error fetching chat history:", error);
         return res.status(500).json({ status: "error", message: "Error fetching chat history" });
     }
 });
+
+// DELETE chat route
+router.post('/delete-chat', async (req, res) => {
+    const { sessionId } = req.body;
+
+    if (!sessionId) {
+        return res.status(400).json({ status: "error", message: "Session ID is required" });
+    }
+
+    try {
+        // Find the chat session by sessionId and delete it
+        const chatSession = await allUserChats.findOneAndDelete({ session: sessionId });
+
+        if (!chatSession) {
+            return res.status(404).json({ status: "error", message: "Chat session not found" });
+        }
+
+        // Also delete the related chat history
+        await chatHistory.deleteMany({ chat: chatSession._id });
+
+        // Respond with success message
+        return res.status(200).json({ status: "success", message: "Chat deleted successfully" });
+
+    } catch (error) {
+        console.error('Error deleting chat:', error);
+        return res.status(500).json({ status: "error", message: "Failed to delete chat" });
+    }
+});
+
 
 
 // LOGOUT ENDPOINT
@@ -363,7 +426,7 @@ router.get('/chat/:session', async (req, res) => {
         if (loggedInUser && chatHistory) {
             res.render('chat', { session: chatHistory.session });
         } else {
-            res.render("notfound");
+            res.render("404");
         }
     } catch (error) {
         console.error(error);

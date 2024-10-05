@@ -52,7 +52,7 @@
 
         .dashboard div {
             width: 25vw;
-            height: 15vh;
+            height: 18vh;
             border: #007BFF 3px solid;
             border-radius: 10px;
             cursor: pointer;
@@ -69,13 +69,13 @@
 <body>
 
     <div class="header">
-        <h1>QuantumConvo</h1>
+        <h1>T-CLM2</h1>
         <a href="#" class="profile-btn">Profile</a>
     </div>
-
+    <h2>My Queries</h2>
     <div class="dashboard">
         <div>
-            <h2 onclick="window.location='/newchat'">New Conversation</h2>
+            <h2 onclick="window.location='/chat'">New Conversation</h2>
         </div>
     </div>
 
@@ -90,17 +90,32 @@
                 const dashboard = document.querySelector('.dashboard');
 
                 // Clear existing elements except for the "New Conversation" div
-                dashboard.innerHTML = '<div onclick="window.location=\'/newchat\'"><h2>New Conversation</h2></div>';
+                dashboard.innerHTML = '<div onclick="window.location=\'/chat\'"><h2>New Conversation</h2></div>';
 
-                data.chats.forEach((chat, index) => {
+                data.chats.forEach((chat) => {
                     const historyDiv = document.createElement('div');
+                    const historyDelete = document.createElement('button');
                     const lastModified = new Date(chat.conversation.time).toLocaleString();
 
+                    // Create the delete button
+                    historyDelete.innerText = 'Delete';
+                    historyDelete.onclick = (event) => {
+                        event.stopPropagation();  // Stop click from triggering parent div
+                        deleteChat(chat.session);
+                    };
+
+                    // Add chat details
                     historyDiv.innerHTML = `
-                        <h2>${chat.conversation.title}</h2>
-                        <p>Last modified: ${lastModified}</p>
-                    `;
+                    <h2>${chat.conversation.title}</h2>
+                    <p>Last modified: ${lastModified}</p>
+                    <input type='hidden' value='${chat.session}' id='chatSession' name='session'>
+                `;
+
+                    // Set click event to go to the chat session
                     historyDiv.onclick = () => window.location = `/chat/${chat.session}`;
+
+                    // Append delete button inside the historyDiv
+                    historyDiv.appendChild(historyDelete);
                     dashboard.appendChild(historyDiv);
                 });
             } else {
@@ -109,8 +124,34 @@
         } catch (error) {
             console.error('Failed to fetch chat history:', error);
         }
+    };
+
+
+    function deleteChat(sessionId) {
+        // const sessionId = document.getElementById('chatSession').value;
+
+        fetch('http://localhost:3000/delete-chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                sessionId: sessionId,
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    console.error('Failed to delete chat');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting chat:', error);
+            });
     }
+
 </script>
 
 
-</html>
+</html>e
