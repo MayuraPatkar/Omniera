@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .profile-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .profile-options button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        #clearDataBtn {
+            background-color: #f0ad4e;
+            color: white;
+        }
+
+        #logoutBtn {
+            background-color: #5bc0de;
+            color: white;
+        }
+
+        #deleteAccountBtn {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        #deleteAccountBtn.danger:hover {
+            background-color: #c9302c;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <h1>Welcome, [Username]</h1>
+        <div class="profile-options">
+            <button id="clearDataBtn">Clear Data</button>
+            <button id="logoutBtn">Logout</button>
+            <button id="deleteAccountBtn" class="danger">Delete Account</button>
+        </div>
+    </div>
+
+    <script>document.getElementById('clearDataBtn').addEventListener('click', function () {
+            fetch('http://localhost:3000/clear-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location = '/';
+                    } else {
+                        console.error('Failed to delete data');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting data:', error);
+                });
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function () {
+            fetch('http://localhost:3000/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location = '/';
+                    } else {
+                        console.error('Failed to logout');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loggin out:', error);
+                });
+        });
+
+        document.getElementById('deleteAccountBtn').addEventListener('click', function () {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                fetch('http://localhost:3000/kill-account', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location = '/';
+                        } else {
+                            console.error('Failed to kill account');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error killing account:', error);
+                    });
+            }
+        });
+    </script>
+</body>
+
+</html>

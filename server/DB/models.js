@@ -1,16 +1,4 @@
 const mongoose = require("mongoose");
-const databaseUrl = "mongodb://127.0.0.1:27017/test";
-
-mongoose
-    .connect(databaseUrl, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .catch((error) => {
-        console.error("Error connecting to the MongoDB database:", error);
-    });
-
-const db = mongoose.connection;
 
 // Account Schema
 const accountSchema = new mongoose.Schema({
@@ -38,6 +26,7 @@ const accountSchema = new mongoose.Schema({
 
 const accounts = mongoose.model("accounts", accountSchema);
 
+
 // Schema for storing all user chat sessions (conversations)
 const allUserChatsSchema = new mongoose.Schema({
     user: {
@@ -60,6 +49,7 @@ const allUserChatsSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const allUserChats = mongoose.model("allUserChats", allUserChatsSchema);
+
 
 // Chat History Schema for individual chat messages
 const chatHistorySchema = new mongoose.Schema({
@@ -91,4 +81,4 @@ const chatHistorySchema = new mongoose.Schema({
 
 const chatHistory = mongoose.model("chatHistories", chatHistorySchema);
 
-module.exports = { db, accounts, allUserChats, chatHistory };
+module.exports = { accounts, allUserChats, chatHistory };

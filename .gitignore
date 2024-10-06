@@ -1,6 +1,4 @@
 node_modules/
 *.pt
-tokenizer_input.json
-tokenizer_output.json
+*.json
 fonts/
-T-MLM/
