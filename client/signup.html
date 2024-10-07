@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #2e2e2e;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -111,9 +111,6 @@
 
                 if (response.ok) {
                     window.location = '/';
-                } else {
-                    // Handle errors
-                    alert(response.status);
                 }
             } catch (error) {
                 console.error("Error:", error);

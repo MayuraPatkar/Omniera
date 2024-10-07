@@ -10,7 +10,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #2e2e2e;
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -19,8 +19,7 @@
 
         .header {
             height: 10vh;
-            background-color: #aa00ff;
-            color: white;
+            background-color: #aa00ff73;
             text-align: center;
         }
 
@@ -28,48 +27,31 @@
             background: none;
             width: fit-content;
             border: none;
-            font-size: 2rem;
+            font-size: 2.3rem;
             text-align: center;
-        }
-
-        .profile-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background-color: white;
-            color: #007BFF;
-            border: 2px solid white;
-            border-radius: 5px;
-            padding: 8px 12px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .profile-btn:hover {
-            background-color: #f4f4f4;
+            color: white;
         }
 
         .chat-container {
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            background-color: #ffffff;
             flex-grow: 1;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
         .chat-box {
             padding: 20px;
-            height: 100%px;
+            height: 100%;
             overflow-y: auto;
+            color: white;
         }
 
         .chat-box .mp {
             font-size: 3rem;
             text-align: center;
-            margin: auto;
+            position: relative;
+            top: 45%;
             font-family: "Pixelify Sans", sans-serif;
         }
 
@@ -82,10 +64,8 @@
 
         .ai-message {
             width: 90%;
-            background-color: #0056b3;
             padding: 1%;
             border-radius: 10px;
-            color: white;
             display: flex;
             margin-bottom: 10px;
         }
@@ -93,17 +73,14 @@
         .user-message {
             width: 90%;
             text-align: right;
-            background-color: #6b00b3;
             padding: 1%;
             border-radius: 10px;
-            color: white;
             display: flex;
             margin-bottom: 10px;
         }
 
         .bot-message {
             background-color: #f4f4f4;
-            color: #333;
             align-self: flex-start;
         }
 
@@ -111,14 +88,13 @@
             padding: 10px;
             display: flex;
             justify-content: space-around;
-            background-color: #eee;
-            border-top: 1px solid #ccc;
         }
 
         input[type="text"] {
             width: 70%;
-            padding: 10px;
+            padding: 20px;
             border: 1px solid black;
+            font-size: 1.3rem;
             border-radius: 5px;
 
         }
