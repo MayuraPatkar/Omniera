@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const { accounts, allUserChats, chatHistory } = require("../DB/dataBase");
+const { accounts, allUserChats, chatHistory } = require("../DB/models");
 const { spawn } = require('child_process');
 const multer = require('multer');
 const upload = multer();
@@ -12,12 +12,12 @@ router.use(cookieParser());
 router.use(express.json());
 
 //GET '/chat'
-router.get('/chat', (req, res) => {
+router.get('/', (req, res) => {
     const sessionString = req.cookies.sessionToken;
     if (sessionString) {
         res.render('chat', { session: sessionString });
     } else {
-        res.redirect('/login'); // Redirect to login if no session token
+        res.redirect('/login');
     }
 });
 
@@ -171,7 +171,7 @@ router.get("/chat-history", async (req, res) => {
 });
 
 // HANDLE LOAD CHAT-HISTORY 
-router.post('/get_chat_history/', async (req, res) => {
+router.post('/get_chat_history', async (req, res) => {
     const sessionString = req.cookies.sessionToken;
 
     if (!sessionString) {
@@ -198,7 +198,7 @@ router.post('/get_chat_history/', async (req, res) => {
         const chatSession = await allUserChats.findOne({ session, user: userId });
 
         if (!chatSession) {
-            return res.status(404).json({ status: "error", message: "Chat session not found" });
+            return res.status(200).json({ status: "notFound", message: "No chat history" });
         }
 
         const history = await chatHistory.find({ chat: chatSession._id }).sort({ time: -1 });
@@ -268,7 +268,7 @@ router.post('/clear-data', async (req, res) => {
 });
 
 // HANDLE LOAD CHAT PAGE
-router.get('/chat/:session', async (req, res) => {
+router.get('/:session', async (req, res) => {
     try {
         const chatSessionId = req.params.session;
         const sessionString = req.cookies.sessionToken;

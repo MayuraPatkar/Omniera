@@ -6,12 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>new chat</title>
     <style>
-        @font-face {
-            font-family: 'Pixelify Sans';
-            src: url("../client/fonts/Pixelify_Sans/static/PixelifySans-Medium.woff2") format('woff2'),
-                url("../client/fonts/Pixelify_Sans/static/PixelifySans-Medium.ttf") format('truetype');
-        }
-
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -179,28 +173,28 @@
     const session = "<%= session %>";
 
     function loadChatHistory() {
-
-
-        fetch('/get_chat_history/', {
+        fetch('/chat/get_chat_history', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', // Specify content type
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ session }), // Ensure session is properly formatted as JSON
+            body: JSON.stringify({ session }),
         })
 
             .then(response => response.json())
             .then(data => {
-                const chatHistoryDiv = document.getElementById('chat-box');
-                const h2 = document.getElementById('h2');
-                h2.style.display = 'block';
-
-                if (data.length > 0) {  // Check if data array is not empty
+                if (data.status != 'notFound') {
+                    const chatHistoryDiv = document.getElementById('chat-box');
+                    const h2 = document.getElementById('h2');
+                    h2.style.display = 'block';
+                    chat_title.value = data.title;
                     chatHistoryDiv.innerHTML = '';
-                    data.forEach(chat => {
-                        appendMessage('user', chat.prompt);
-                        appendMessage('ai', chat.response);
-                    });
+                    if (data.history && data.history.length > 0) {
+                        data.history.forEach(chat => {
+                            appendMessage('user', chat.prompt);
+                            appendMessage('ai', chat.response);
+                        });
+                    }
                 }
             })
             .catch(error => {
@@ -211,11 +205,37 @@
         loadChatHistory();
     }
 
+    chat_title.addEventListener('blur', () => {
+        const newTitle = chat_title.value.trim();
 
+        if (newTitle) {
+            const sessionId = window.location.pathname.split('/').pop();
+
+            fetch('http://localhost:3000/chat/update-title', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    sessionId: sessionId,
+                    newTitle: newTitle
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        console.error('Failed to update title');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating title:', error);
+                });
+        } else {
+            console.error('Title cannot be empty');
+        }
+    });
 
 
     function handleFormSubmit(event) {
-        // event.preventDefault();  // Prevent form submission from reloading the page
         const prompt = document.getElementById('user_input').value.trim();
         const title = chat_title.value;
 
@@ -233,11 +253,15 @@
 
     function sendPrompt(formData) {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:3000/ai-response/');
+        xhr.open('POST', 'http://localhost:3000/chat/ai-response/');
         xhr.onload = function () {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 appendMessage('ai', response.response);
+                if (!window.location.pathname.includes(response.sessionId)) {
+                    const newUrl = `/chat/${response.sessionId}`;
+                    window.history.replaceState({ path: newUrl }, '', newUrl);
+                }
             } else {
                 console.error('Request failed. Status: ' + xhr.status);
             }

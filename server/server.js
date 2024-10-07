@@ -37,7 +37,7 @@ const chatRoutes = require("./routes/chat"); // Importing chat routes
 
 // ROUTES MIDDLEWARE
 app.use("/", userRoutes);
-app.use("/", chatRoutes);
+app.use("/chat", chatRoutes);
 
 // 404
 app.use((req, res, next) => {

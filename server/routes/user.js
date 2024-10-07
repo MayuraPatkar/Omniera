@@ -205,9 +205,4 @@ function generateSession() {
     });
 }
 
-// 404 Page Not Found Middleware
-router.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, '../../client/404.html'));
-});
-
 module.exports = router;

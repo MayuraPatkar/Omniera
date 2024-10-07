@@ -70,12 +70,12 @@
 
     <div class="header">
         <h1>T-CLM2</h1>
-        <a href="#" class="profile-btn">Profile</a>
+        <a href="/profile" class="profile-btn">Profile</a>
     </div>
 
     <div class="dashboard">
-        <div>
-            <h2 onclick="window.location='/newchat'">New Conversation</h2>
+        <div onclick="window.location='/chat'">
+            <h2>New Conversation</h2>
         </div>
     </div>
 
@@ -83,14 +83,14 @@
 <script>
     window.onload = async function () {
         try {
-            const response = await fetch("/chat-history");
+            const response = await fetch("/chat/chat-history");
             const data = await response.json();
 
             if (data.status === "success") {
                 const dashboard = document.querySelector('.dashboard');
 
                 // Clear existing elements except for the "New Conversation" div
-                dashboard.innerHTML = '<div onclick="window.location=\'/newchat\'"><h2>New Conversation</h2></div>';
+                dashboard.innerHTML = '<div onclick="window.location=\'/chat\'"><h2>New Conversation</h2></div>';
 
                 data.chats.forEach((chat, index) => {
                     const historyDiv = document.createElement('div');
