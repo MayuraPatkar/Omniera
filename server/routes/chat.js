@@ -9,16 +9,19 @@ const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
 router.use(cookieParser());
-router.use(express.json())
+router.use(express.json());
 
-
-//GET '/newchat'
+//GET '/chat'
 router.get('/chat', (req, res) => {
-    res.render('chat', { session: chatHistory.session });
+    const sessionString = req.cookies.sessionToken;
+    if (sessionString) {
+        res.render('chat', { session: sessionString });
+    } else {
+        res.redirect('/login'); // Redirect to login if no session token
+    }
 });
 
-
-// HANDLE AI RESPONSE AND DB 
+// HANDLE AI RESPONSE AND DB
 router.post("/ai-response", upload.none(), async (req, res) => {
     const sessionString = req.cookies.sessionToken;
     let userId = null;
@@ -40,14 +43,17 @@ router.post("/ai-response", upload.none(), async (req, res) => {
 
     let result = '';
 
+    // Collect data from Python process
     pythonProcess.stdout.on('data', (data) => {
         result += data.toString();
     });
 
+    // Handle stderr
     pythonProcess.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
     });
 
+    // Handle process close event
     pythonProcess.on('close', async (code) => {
         if (code !== 0) {
             return res.status(500).json({ status: "error", message: "Python process failed" });
@@ -55,18 +61,16 @@ router.post("/ai-response", upload.none(), async (req, res) => {
 
         try {
             const jsonResponse = JSON.parse(result);
-
             if (!jsonResponse) {
                 return res.status(500).json({ status: "error", message: "No AI response" });
             }
 
-            // Chat session handling
+            // Handle chat session
             let chatSession;
             let sessionId;
-            if (chatSessionId == "chat") {
-                sessionId = uuidv4(); // Unique session for each chat
+            if (!chatSessionId) { // New chat session if no sessionId is provided
+                sessionId = uuidv4();
 
-                // New chat session
                 chatSession = new allUserChats({
                     user: userId,
                     session: sessionId,
@@ -98,7 +102,7 @@ router.post("/ai-response", upload.none(), async (req, res) => {
 
             await newChatHistory.save();
 
-            // Respond to the client
+            // Respond to client
             return res.status(200).json({
                 status: "success",
                 response: jsonResponse,
@@ -110,15 +114,20 @@ router.post("/ai-response", upload.none(), async (req, res) => {
             return res.status(500).json({ status: "error", message: "Error processing AI response" });
         }
     });
+
+    // Handle Python process error
+    pythonProcess.on('error', (error) => {
+        console.error('Failed to start Python process:', error);
+        return res.status(500).json({ status: "error", message: "Failed to start Python process" });
+    });
 });
 
-
-//HANDLE TITLE
+// HANDLE TITLE
 router.post('/update-title', async (req, res) => {
     const { sessionId, newTitle } = req.body;
 
     try {
-        // Update the title in the database based on sessionId
+        // Update title in database
         const chatSession = await allUserChats.findOneAndUpdate(
             { session: sessionId },
             { $set: { 'conversation.title': newTitle } }
@@ -135,8 +144,7 @@ router.post('/update-title', async (req, res) => {
     }
 });
 
-
-//HANDLE LOAD ALL CHATS
+// HANDLE LOAD ALL CHATS
 router.get("/chat-history", async (req, res) => {
     const sessionString = req.cookies.sessionToken;
     let userId = null;
@@ -162,8 +170,7 @@ router.get("/chat-history", async (req, res) => {
     }
 });
 
-
-//HANDLE LOAD CHAT-HISTORY 
+// HANDLE LOAD CHAT-HISTORY 
 router.post('/get_chat_history/', async (req, res) => {
     const sessionString = req.cookies.sessionToken;
 
@@ -196,13 +203,11 @@ router.post('/get_chat_history/', async (req, res) => {
 
         const history = await chatHistory.find({ chat: chatSession._id }).sort({ time: -1 });
 
-        // Format the chat history
         const formattedHistory = history.map(chat => ({
             prompt: chat.conversation.user,
             response: chat.conversation.ai,
         }));
 
-        // Respond with chat history and the title
         return res.status(200).json({
             status: "success",
             title: chatSession.conversation.title,
@@ -214,7 +219,6 @@ router.post('/get_chat_history/', async (req, res) => {
         return res.status(500).json({ status: "error", message: "Error fetching chat history" });
     }
 });
-
 
 // DELETE chat route
 router.post('/delete-chat', async (req, res) => {
@@ -258,11 +262,10 @@ router.post('/clear-data', async (req, res) => {
         return res.status(200).json({ status: "success", message: "Data cleared successfully" });
 
     } catch (error) {
-        console.error('Error deleting chat:', error);
+        console.error('Error deleting data:', error);
         return res.status(500).json({ status: "error", message: "Failed to delete data" });
     }
 });
-
 
 // HANDLE LOAD CHAT PAGE
 router.get('/chat/:session', async (req, res) => {
@@ -270,25 +273,25 @@ router.get('/chat/:session', async (req, res) => {
         const chatSessionId = req.params.session;
         const sessionString = req.cookies.sessionToken;
 
-        const loggedInUser = await accounts.findOne({ session: sessionString });
-        const chatHistory = await allUserChats.findOne({ session: chatSessionId });
-
-        if (loggedInUser && chatHistory) {
-            res.render('chat', { session: chatHistory.session });
-        } else {
-            res.render("404");
+        if (!sessionString) {
+            return res.status(401).json({ status: 'error', message: 'Unauthorized: No session token' });
         }
+
+        const user = await accounts.findOne({ session: sessionString });
+        if (!user) {
+            return res.status(404).json({ status: 'error', message: 'User not found' });
+        }
+
+        const chatSession = await allUserChats.findOne({ session: chatSessionId, user: user._id });
+        if (!chatSession) {
+            return res.status(404).json({ status: 'error', message: 'Chat session not found' });
+        }
+
+        res.render('chat', { session: chatSession.session });
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal server error');
+        console.error('Error loading chat page:', error);
+        res.status(500).json({ status: 'error', message: 'Failed to load chat page' });
     }
 });
-
-
-// 404 Page Not Found Middleware
-router.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, '../../client/404.html'));
-});
-
 
 module.exports = router;

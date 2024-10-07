@@ -1,13 +1,13 @@
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const { db, accounts, allUserChats, chatHistory } = require("../DB/dataBase");
+const { db } = require("../DB/dataBase");
+const { accounts, allUserChats, chatHistory } = require("../DB/models");
 const bcrypt = require('bcrypt');
 const router = express.Router();
 
 router.use(cookieParser());
-router.use(express.json())
-
+router.use(express.json());
 
 // GET '/'
 router.get("/", (req, res) => {
@@ -34,24 +34,25 @@ router.get("/", (req, res) => {
     }
 });
 
-
 // GET '/signup'
 router.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '../../client/signup.html'));
 });
-
 
 // GET '/login'
 router.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../../client/login.html'));
 });
 
-
-//GET '/profile'
+// GET '/profile'
 router.get('/profile', (req, res) => {
-    res.render('profile', { session: chatHistory.session });
+    const sessionString = req.cookies.sessionToken;
+    if (sessionString) {
+        res.render('profile', { session: sessionString });
+    } else {
+        res.redirect('/login');
+    }
 });
-
 
 // Handle sign-up
 router.post('/signup', async (req, res) => {
@@ -99,7 +100,6 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-
 // Handle login
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
@@ -144,13 +144,11 @@ router.post("/login", async (req, res) => {
     }
 });
 
-
 // LOGOUT ENDPOINT
 router.post('/logout', (req, res) => {
     res.clearCookie('sessionToken');
     return res.status(200).json({ status: "success", message: "Logged out successfully." });
 });
-
 
 // KILL ACCOUNT
 router.post('/kill-account', async (req, res) => {
@@ -181,7 +179,6 @@ router.post('/kill-account', async (req, res) => {
     }
 });
 
-
 // Function to generate session token
 function generateSession() {
     return new Promise((resolve, reject) => {
@@ -196,7 +193,7 @@ function generateSession() {
             .toArray()
             .then((result) => {
                 if (result.length > 0) {
-                    resolve(sessionString);
+                    reject(new Error("Duplicate session token. Regenerate session."));
                 } else {
                     resolve(sessionString);
                 }
@@ -208,11 +205,9 @@ function generateSession() {
     });
 }
 
-
 // 404 Page Not Found Middleware
 router.use((req, res, next) => {
     res.status(404).sendFile(path.join(__dirname, '../../client/404.html'));
 });
-
 
 module.exports = router;
