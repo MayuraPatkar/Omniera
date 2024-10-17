@@ -66,10 +66,9 @@ router.post("/ai-response", upload.none(), async (req, res) => {
                 return res.status(500).json({ status: "error", message: "No AI response" });
             }
 
-            // Handle chat session
             let chatSession;
             let sessionId;
-            if (!chatSessionId) { // New chat session if no sessionId is provided
+            if (!chatSessionId) {
                 sessionId = uuidv4();
 
                 chatSession = new allUserChats({
@@ -89,7 +88,6 @@ router.post("/ai-response", upload.none(), async (req, res) => {
                 }
             }
 
-            // Save chat history
             const newChatHistory = new chatHistory({
                 user: userId,
                 chat: chatSession._id,
@@ -103,7 +101,6 @@ router.post("/ai-response", upload.none(), async (req, res) => {
 
             await newChatHistory.save();
 
-            // Respond to client
             return res.status(200).json({
                 status: "success",
                 response: jsonResponse,
@@ -116,7 +113,6 @@ router.post("/ai-response", upload.none(), async (req, res) => {
         }
     });
 
-    // Handle Python process error
     pythonProcess.on('error', (error) => {
         console.error('Failed to start Python process:', error);
         return res.status(500).json({ status: "error", message: "Failed to start Python process" });
@@ -128,7 +124,7 @@ router.post('/update-title', async (req, res) => {
     const { sessionId, newTitle } = req.body;
 
     try {
-        // Update title in database
+
         const chatSession = await allUserChats.findOneAndUpdate(
             { session: sessionId },
             { $set: { 'conversation.title': newTitle } }

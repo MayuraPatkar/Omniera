@@ -468,10 +468,14 @@
         const prompt = user_input.value.trim();
         const title = chat_title.value;
 
+        const urlSegments = window.location.pathname.split('/');
+        const chatSession = urlSegments[urlSegments.length - 1] || null;
+
         if (prompt) {
             const formData = new FormData();
             formData.append('conversationTitle', title);
             formData.append('prompt', prompt);
+            formData.append('chatSessionId', chatSession);
 
             appendMessage('user', prompt);
             sendPrompt(formData, animationInstance);
@@ -481,6 +485,7 @@
             console.error('Prompt is empty!');
         }
     }
+
 
 
     function appendMessageWordByWord(sender, message) {
