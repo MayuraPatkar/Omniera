@@ -1,0 +1,127 @@
+/* Global color palette */
+:root {
+    --color-primary: #2C3E50;
+    --color-secondary: #727D95;
+    --color-accent: #7614fe;
+    --color-light: #f4f4f4;
+    --color-dark: #1a1a1a;
+    --color-white: #ffffff;
+    --color-border: #93a0bc;
+    --color-bg: #f5f5f5;
+
+    /* Button specific colors */
+    --btn-hover: #0056b3;
+    --btn-background: var(--color-accent);
+    --btn-text-color: var(--color-white);
+
+    /* Typography */
+    --font-primary: "Roboto", sans-serif;
+    --font-secondary: "Pixelify Sans", sans-serif;
+    --font-size-base: 16px;
+    --font-size-large: 2rem;
+    --font-size-small: 0.8rem;
+
+    /* Spacing (margins/padding) */
+    --spacing-small: 8px;
+    --spacing-medium: 16px;
+    --spacing-large: 32px;
+
+    /* Borders */
+    --border-radius-small: 5px;
+    --border-radius-large: 50px;
+    --border-color: var(--color-border);
+
+    /* Shadows */
+    --box-shadow-light: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --box-shadow-dark: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+    /* Animations */
+    --transition-speed: 0.3s ease-in-out;
+}
+
+/* Body */
+body {
+    font-family: var(--font-primary);
+    background-color: var(--color-secondary);
+    color: var(--color-light);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-secondary);
+    margin: 0;
+    color: var(--color-primary);
+}
+
+/* Buttons */
+button {
+    font-family: var(--font-secondary);
+    background-color: var(--btn-background);
+    color: var(--btn-text-color);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border: none;
+    border-radius: var(--border-radius-large);
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+button:hover {
+    background-color: var(--btn-hover);
+}
+
+/* Links */
+a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
+
+a:hover {
+    color: var(--btn-hover);
+}
+
+/* Input fields */
+input[type="text"] {
+    background-color: var(--color-primary);
+    color: var(--color-light);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-small);
+    border-radius: var(--border-radius-small);
+    font-size: var(--font-size-base);
+}
+
+/* Flexbox Utility Classes */
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    body {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    body {
+        font-size: 12px;
+    }
+}

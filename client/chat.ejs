@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../assets/logo_O.png" type="image/x-icon">
+    <link rel="stylesheet" href="./global.css">
     <title>new chat</title>
     <style>
         body {
@@ -48,8 +49,67 @@
             text-align: center;
             color: white;
             margin: auto;
-            margin-right: 550px;
+            margin-left: 25%;
 
+        }
+
+        .settings {
+            width: 40px;
+            height: 40px;
+            background-color: #727D95;
+            border-radius: 7px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .settings:hover {
+            background-color: #636e82;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #f4f4f4;
+            margin: 0 1px;
+        }
+
+        .settings-buttton {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: #2C3E50;
+            border: 1px solid #93a0bc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 150px;
+            z-index: 1000;
+            padding: 10px 0;
+        }
+
+        .settings-buttton.show {
+            display: block;
+        }
+
+        .settings-buttton button {
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            padding: 10px;
+            text-align: left;
+            width: 100%;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .settings-buttton button:hover {
+            background-color: #3B4D61;
         }
 
         .chat-container {
@@ -278,12 +338,23 @@
             <img src="./../assets/Logo.png" alt="logo">
         </div>
         <input type="text" class="title" id="title" value="New Chat 1" autocomplete="off">
+        <div class="settings" id="settings">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+    <div class="settings-buttton" id="settings-buttton">
+        <button class="setting-button" id="edit_title" onclick="edit_title()">Edit title</button>
+        <button class="setting-button" id="clear-chat" onclick="clear_chat()">Clear chat</button>
+        <button class="setting-button" id="go_back" onclick="window.location='/'">Go Back</button>
     </div>
 
     <div class="chat-container">
         <div class="chat-box" id="chat-box">
-            <div class="logo_O"><img src="../assets/logo_O.png" alt="logo"></div>
-            <p id="h2" class="mp">Hello I'm <span><img src="../assets/logo_name.png"></span>, How can I help you today?</p>
+            <div class="logo_O" id="logo_O"><img src="../assets/logo_O.png" alt="logo"></div>
+            <p id="h2" class="mp">Hello I'm <span><img src="../assets/logo_name.png"></span>, How can I help you today?
+            </p>
         </div>
         <div class="user-input">
             <form id="chat-input">
@@ -318,6 +389,22 @@
             path: "../assets/generate-animation.json"
         });
     }
+    const settingsButton = document.getElementById('settings');
+    const settingsDropdown = document.getElementById('settings-buttton');
+
+    function settingButtonClickHandler() {
+        if (settingsDropdown.classList.contains('expand-again')) {
+            settingsDropdown.classList.remove('expand-again');
+            settingsDropdown.classList.remove('show');
+        } else {
+            settingsDropdown.classList.add('expand-again');
+            settingsDropdown.classList.add('show');
+            console.log("hello");
+        }
+    }
+
+    settingsButton.addEventListener('click', settingButtonClickHandler);
+
 
 
     form.addEventListener('submit', function (event) {
@@ -328,10 +415,11 @@
             alert('Message cannot be empty. Please type something.');
             return;
         }
-
+        const logo_O = document.getElementById('logo_O');
         const h2 = document.getElementById('h2');
-        if (h2) {
+        if (h2 && logo_O) {
             h2.style.display = 'none';
+            logo_O.style.display = 'none';
         }
         buttonContent.style.display = 'none';
         const animationInstance = loadAnimation();
@@ -353,8 +441,8 @@
             .then(response => response.json())
             .then(data => {
                 const h2 = document.getElementById('h2');
+                const logo_O = document.getElementById('logo_O');
                 if (data.status === 'notFound') {
-                    console.log('No chat history found.');
                     return;
                 }
 
@@ -368,6 +456,7 @@
                     });
                 } else {
                     h2.style.display = 'block';
+                    logo_O.style.display = 'block';
                 }
             })
             .catch(error => {
