@@ -6,6 +6,7 @@ const { spawn } = require('child_process');
 const multer = require('multer');
 const upload = multer();
 const { v4: uuidv4 } = require('uuid');
+const { status } = require("express/lib/response");
 const router = express.Router();
 
 router.use(cookieParser());
@@ -147,28 +148,32 @@ router.post('/update-title', async (req, res) => {
 // HANDLE LOAD ALL CHATS
 router.get("/chat-history", async (req, res) => {
     const sessionString = req.cookies.sessionToken;
-    let userId = null;
 
-    if (sessionString) {
-        try {
-            const user = await accounts.findOne({ session: sessionString });
-            if (user) {
-                userId = user._id;
-            } else {
-                return res.status(404).json({ status: "error", message: "User not found" });
-            }
-        } catch (error) {
-            return res.status(500).json({ status: "error", message: "Error finding user" });
-        }
+    if (!sessionString) {
+        return res.status(400).json({ status: "error", message: "No session token provided" });
     }
 
     try {
-        const chats = await allUserChats.find({ user: userId }).sort({ "conversation.time": -1 });
+        const user = await accounts.findOne({ session: sessionString });
+
+        if (!user) {
+            return res.status(404).json({ status: "error", message: "User not found" });
+        }
+
+        const chats = await allUserChats.find({ user: user._id }).sort({ "conversation.time": -1 });
+
+        if (chats.length === 0) {
+            return res.status(200).json({ status: "success", message: "No chat history", chats: [] });
+        }
+
         return res.status(200).json({ status: "success", chats });
+
     } catch (error) {
+        console.error("Error fetching chat history:", error);
         return res.status(500).json({ status: "error", message: "Error fetching chat history" });
     }
 });
+
 
 // HANDLE LOAD CHAT-HISTORY 
 router.post('/get_chat_history', async (req, res) => {

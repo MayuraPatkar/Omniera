@@ -4,31 +4,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Chatbot Home</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Roboto", sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #2e2e2e;
-            flex-direction: column;
+            background-color: #727D95;
             height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
-            background-color: #aa00ff73;
+            width: 100%;
+            height: 10vh;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background-color: #2C3E50;
             color: white;
-            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+        }
+
+        .logo {
+            height: 70%;
+        }
+
+        .logo img {
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .header h1 {
+            flex-grow: 1;
             text-align: center;
-            position: relative;
+            margin: 0;
+            margin-right: 80px;
+            font-size: 2em;
         }
 
         .profile-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
             background-color: white;
-            color: #007BFF;
+            color: #000000;
             border: 2px solid white;
             border-radius: 5px;
             padding: 8px 12px;
@@ -43,31 +65,48 @@
 
         .dashboard {
             width: 100vw;
+            padding: 2.5%;
             display: flex;
             justify-content: space-evenly;
             flex-wrap: wrap;
             box-sizing: border-box;
-            padding: 5%;
         }
 
-        .dashboard div {
-            width: 25vw;
-            height: 22vh;
-            border: #007BFF 3px solid;
+        .chats{
+            width: 25%;
+            height: 30vh;
+            background-color:#82a9cf;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .initdiv {
+            width: 80%;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
             color: white;
             border-radius: 10px;
             cursor: pointer;
             text-align: center;
-            margin-bottom: 30px;
         }
 
-        .dashboard button{
-            background-color: rgba(255, 0, 0, 0.605);
+        .initdiv button {
+            background-color: #b3c6f1;
             border: none;
-            width: 40%;
-            color: white;
-            height: 30%;
+            width: 20%;
+            font-size: 2rem;
+            color: rgb(0, 0, 0);
+            height: 10%;
             border-radius: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -75,26 +114,29 @@
 <body>
 
     <div class="header">
-        <h1>T-CLM2</h1>
+        <div class="logo" onclick="window.location = '/'">
+            <img src="./../assets/Logo.png" alt="logo">
+        </div>
+        <h1>Your Queries</h1>
         <a href="/profile" class="profile-btn">Profile</a>
     </div>
 
     <div class="dashboard">
-        <div onclick="window.location='/chat'">
-            <h2>New Conversation</h2>
-        </div>
     </div>
 
 </body>
+
+
 <script>
+    const dashboard = document.querySelector('.dashboard');
+
     window.onload = async function () {
         try {
             const response = await fetch("/chat/chat-history");
             const data = await response.json();
 
-            if (data.status === "success") {
-                const dashboard = document.querySelector('.dashboard');
-                dashboard.innerHTML = '<div onclick="window.location=\'/chat\'"><h2>New Conversation</h2></div>';
+            if (data.chats.length != 0) {
+                dashboard.innerHTML = '<div class="chats" onclick="window.location=\'/chat\'"><h2>New Conversation</h2></div>';
                 data.chats.forEach((chat, index) => {
                     const historyDiv = document.createElement('div');
                     const historyDelete = document.createElement('button');
@@ -105,7 +147,7 @@
                         event.stopPropagation();
                         deleteChat(chat.session, historyDiv);
                     };
-
+                    historyDiv.classList = "chats";
                     historyDiv.innerHTML = `
                         <h2>${chat.conversation.title}</h2>
                         <p>Last modified: ${lastModified}</p>
@@ -114,9 +156,11 @@
                     historyDiv.onclick = () => window.location = `/chat/${chat.session}`;
                     historyDiv.appendChild(historyDelete);
                     dashboard.appendChild(historyDiv);
+
                 });
+
             } else {
-                console.error('Error fetching chat history:', data.message);
+                dashboard.innerHTML = '<div class="initdiv"><h1>Start your New conversation</h1><button onclick="window.location=\'/chat\'">Start</div></button>';
             }
         } catch (error) {
             console.error('Failed to fetch chat history:', error);

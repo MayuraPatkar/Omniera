@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../assets/logo_O.png" type="image/x-icon">
     <title>new chat</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Roboto", sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #2e2e2e;
+            background-color: #727D95;
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -18,21 +19,42 @@
         }
 
         .header {
+            width: 100%;
             height: 10vh;
-            background-color: #aa00ff73;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background-color: #2C3E50;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            height: 70%;
+        }
+
+        .logo img {
+            height: 100%;
+            object-fit: contain;
         }
 
         .header .title {
+            font-family: "Roboto", sans-serif;
             background: none;
             width: fit-content;
             border: none;
             font-size: 2.3rem;
             text-align: center;
             color: white;
+            margin: auto;
+            margin-right: 550px;
+
         }
 
         .chat-container {
+            height: 100%;
+            font-family: "Roboto", sans-serif;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -41,10 +63,36 @@
         }
 
         .chat-box {
-            padding: 20px;
-            height: 100%;
+            height: 90%;
+            width: 70vw;
+            margin: auto;
             overflow-y: auto;
             color: white;
+            box-sizing: border-box;
+        }
+
+        .logo_O {
+            width: 10%;
+            height: 10%;
+            margin: auto;
+            position: relative;
+            top: 45%;
+        }
+
+        .logo_O img {
+            height: 100%;
+            object-fit: contain;
+            animation: logo_rotate 5s linear infinite;
+        }
+
+        @keyframes logo_rotate {
+            from {
+                transform: rotate(0);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .chat-box .mp {
@@ -55,28 +103,21 @@
             font-family: "Pixelify Sans", sans-serif;
         }
 
-        .message {
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            width: fit-content;
-        }
-
-        .ai-message {
-            width: 90%;
-            padding: 1%;
-            border-radius: 10px;
-            display: flex;
-            margin-bottom: 10px;
-        }
-
         .user-message {
-            width: 90%;
+            width: fit-content;
             text-align: right;
             padding: 1%;
             border-radius: 10px;
             display: flex;
-            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .ai-message {
+            width: fit-content;
+            padding: 1%;
+            border-radius: 10px;
+            display: flex;
+            font-size: 1.5rem;
         }
 
         .bot-message {
@@ -84,32 +125,148 @@
             align-self: flex-start;
         }
 
+        .user-input {
+            width: 100%;
+            height: 10%;
+        }
+
         #chat-input {
-            padding: 10px;
+            width: 70vw;
+            height: 80%;
+            border-radius: 50px;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
+            background-color: #2C3E50;
+            margin: auto;
+            box-sizing: border-box;
+            padding-left: 2%;
         }
 
         input[type="text"] {
             width: 70%;
-            padding: 20px;
-            border: 1px solid black;
+            border: none;
+            outline: none;
+            color: white;
             font-size: 1.3rem;
             border-radius: 5px;
-
+            background: none;
         }
 
         .send-btn {
+            position: relative;
+            width: 10%;
+            height: 80%;
             background-color: #7614fe;
             color: white;
-            padding: 10px;
+            margin: auto 5px;
+            font-size: 1rem;
             border: none;
+            border-radius: 50px;
             cursor: pointer;
-            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #animation-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+
         }
 
         .send-btn:hover {
             background-color: #0056b3;
+        }
+
+        .button-content {
+            display: flex;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .chat-box {
+                width: 90vw;
+            }
+
+            input[type="text"] {
+                width: 60%;
+            }
+
+            .send-btn {
+                width: 15%;
+                font-size: 0.8rem;
+            }
+
+            .header .title {
+                font-size: 1.5rem;
+                margin-right: 20px;
+            }
+
+            .logo_O {
+                width: 15%;
+                height: 15%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                height: 90vh;
+            }
+
+            .header {
+                height: 7vh;
+                width: 100vw;
+            }
+
+            .header .title {
+                font-size: 1.3rem;
+                width: 70%
+            }
+
+            .logo {
+                height: 50%;
+            }
+
+            .chat-box {
+                width: 100vw;
+            }
+
+            #chat-input {
+                width: 95vw;
+                height: 80%;
+            }
+
+            input[type="text"] {
+                width: 50%;
+                font-size: 1rem;
+            }
+
+            .send-btn {
+                width: 20%;
+                font-size: 0.7rem;
+            }
+
+            .header .title {
+                font-size: 1.2rem;
+            }
+
+            .logo_O {
+                width: 10%;
+                height: 10%;
+                top: 25%;
+            }
+
+            .chat-box .mp {
+                top: 25%;
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -117,36 +274,73 @@
 <body>
 
     <div class="header">
+        <div class="logo" onclick="window.location = '/'">
+            <img src="./../assets/Logo.png" alt="logo">
+        </div>
         <input type="text" class="title" id="title" value="New Chat 1" autocomplete="off">
     </div>
 
     <div class="chat-container">
         <div class="chat-box" id="chat-box">
-            <p id="h2" class="mp">How can I help you today?</p>
+            <div class="logo_O"><img src="../assets/logo_O.png" alt="logo"></div>
+            <p id="h2" class="mp">Hello I'm <span><img src="../assets/logo_name.png"></span>, How can I help you today?</p>
         </div>
-        <form id="chat-input">
-            <input type="text" id="user_input" placeholder="Type your message..." autocomplete="off">
-            <button class="send-btn" type="submit">Generate</button>
-        </form>
+        <div class="user-input">
+            <form id="chat-input">
+                <input type="text" id="user_input" placeholder="Type your message..." autocomplete="off">
+                <button class="send-btn" type="submit">
+                    <div id="buttonContent">Generate</div>
+                    <div id="animation-container"></div>
+                </button>
+            </form>
+        </div>
+
     </div>
 
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.8/lottie.min.js"></script>
 <script>
     const chatBox = document.getElementById('chat-box');
     const form = document.getElementById('chat-input');
     const user_input = document.getElementById('user_input');
     const chat_title = document.getElementById('title');
+    const buttonContent = document.getElementById('buttonContent');
+    const animationContainer = document.getElementById('animation-container');
+    const session = "<%= session %>";
+
+    function loadAnimation() {
+        animationContainer.style.display = 'flex';
+        return lottie.loadAnimation({
+            container: animationContainer,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: "../assets/generate-animation.json"
+        });
+    }
+
 
     form.addEventListener('submit', function (event) {
-        if (user_input.value) {
-            const h2 = document.getElementById('h2');
-            if (h2)
-                h2.style.display = 'none';
-            event.preventDefault();
-            handleFormSubmit();
+        event.preventDefault();
+
+        const userMessage = user_input.value.trim();
+        if (!userMessage) {
+            alert('Message cannot be empty. Please type something.');
+            return;
         }
+
+        const h2 = document.getElementById('h2');
+        if (h2) {
+            h2.style.display = 'none';
+        }
+        buttonContent.style.display = 'none';
+        const animationInstance = loadAnimation();
+        handleFormSubmit(animationInstance);
     });
-    const session = "<%= session %>";
+
+    if (session) {
+        loadChatHistory();
+    }
 
     function loadChatHistory() {
         fetch('/chat/get_chat_history', {
@@ -154,31 +348,118 @@
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ session }),
+            body: JSON.stringify({ session })
         })
-
             .then(response => response.json())
             .then(data => {
-                if (data.status != 'notFound') {
-                    const chatHistoryDiv = document.getElementById('chat-box');
-                    const h2 = document.getElementById('h2');
+                const h2 = document.getElementById('h2');
+                if (data.status === 'notFound') {
+                    console.log('No chat history found.');
+                    return;
+                }
+
+                chat_title.value = data.title;
+                chatBox.innerHTML = '';
+
+                if (data.history && data.history.length > 0) {
+                    data.history.forEach(chat => {
+                        appendMessage('user', chat.prompt);
+                        appendMessage('ai', chat.response);
+                    });
+                } else {
                     h2.style.display = 'block';
-                    chat_title.value = data.title;
-                    chatHistoryDiv.innerHTML = '';
-                    if (data.history && data.history.length > 0) {
-                        data.history.forEach(chat => {
-                            appendMessage('user', chat.prompt);
-                            appendMessage('ai', chat.response);
-                        });
-                    }
                 }
             })
             .catch(error => {
                 console.error('Error fetching chat history:', error);
             });
     }
-    if (session) {
-        loadChatHistory();
+
+    function handleFormSubmit(animationInstance) {
+        const prompt = user_input.value.trim();
+        const title = chat_title.value;
+
+        if (prompt) {
+            const formData = new FormData();
+            formData.append('conversationTitle', title);
+            formData.append('prompt', prompt);
+
+            appendMessage('user', prompt);
+            sendPrompt(formData, animationInstance);
+
+            user_input.value = '';
+        } else {
+            console.error('Prompt is empty!');
+        }
+    }
+
+
+    function appendMessageWordByWord(sender, message) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add(sender + '-message');
+        const p = document.createElement('p');
+        messageElement.appendChild(p);
+        chatBox.appendChild(messageElement);
+
+        const words = message.split(' ');
+        let wordIndex = 0;
+
+        const intervalId = setInterval(() => {
+            if (wordIndex < words.length) {
+                p.innerHTML += words[wordIndex] + ' ';
+                wordIndex++;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } else {
+                clearInterval(intervalId);
+            }
+        }, 100);
+    }
+
+    function sendPrompt(formData, animationInstance) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:3000/chat/ai-response/');
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                appendMessageWordByWord('ai', response.response);
+
+                if (!window.location.pathname.includes(response.sessionId)) {
+                    const newUrl = `/chat/${response.sessionId}`;
+                    window.history.replaceState({ path: newUrl }, '', newUrl);
+                }
+            } else {
+                console.error('Request failed. Status:', xhr.status);
+                alert('Failed to get a response. Please try again.');
+            }
+
+            animationInstance.stop();
+            animationInstance.destroy();
+            animationContainer.style.display = 'none';
+            buttonContent.style.display = 'flex';
+        };
+
+        xhr.onerror = function () {
+            console.error('Network error. Unable to reach the server.');
+            alert('Network error. Please check your connection.');
+
+            animationInstance.stop();
+            animationInstance.destroy();
+            animationContainer.style.display = 'none';
+            buttonContent.style.display = 'flex';
+        };
+
+        xhr.send(formData);
+    }
+
+
+    function appendMessage(sender, message) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add(sender + '-message');
+        messageElement.innerHTML = `<p>${message}</p>`;
+
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     chat_title.addEventListener('blur', () => {
@@ -186,80 +467,33 @@
 
         if (newTitle) {
             const sessionId = window.location.pathname.split('/').pop();
-
-            fetch('http://localhost:3000/chat/update-title', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    sessionId: sessionId,
-                    newTitle: newTitle
-                })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        console.error('Failed to update title');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error updating title:', error);
-                });
+            updateChatTitle(sessionId, newTitle);
         } else {
-            console.error('Title cannot be empty');
+            alert('Title cannot be empty.');
         }
     });
 
-
-    function handleFormSubmit(event) {
-        const prompt = document.getElementById('user_input').value.trim();
-        const title = chat_title.value;
-
-        if (prompt) {
-            const formData = new FormData();
-            formData.append('conversationTitle', title);
-            formData.append('prompt', prompt);
-            appendMessage('user', prompt);
-            sendPrompt(formData);
-            document.getElementById('user_input').value = '';
-        } else {
-            console.error('Prompt is empty!');
-        }
-    }
-
-    function sendPrompt(formData) {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:3000/chat/ai-response/');
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                appendMessage('ai', response.response);
-                if (!window.location.pathname.includes(response.sessionId)) {
-                    const newUrl = `/chat/${response.sessionId}`;
-                    window.history.replaceState({ path: newUrl }, '', newUrl);
+    function updateChatTitle(sessionId, newTitle) {
+        fetch('http://localhost:3000/chat/update-title', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                sessionId: sessionId,
+                newTitle: newTitle
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Failed to update title');
+                    alert('Failed to update the title. Try again.');
                 }
-            } else {
-                console.error('Request failed. Status: ' + xhr.status);
-            }
-        };
-        xhr.send(formData);
-
+            })
+            .catch(error => {
+                console.error('Error updating title:', error);
+            });
     }
-
-    function appendMessage(sender, message) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add(sender + '-message');
-
-        if (sender == "user") {
-            messageElement.innerHTML = "<p>You: " + message + "</p>";
-        } else {
-            messageElement.innerHTML = "<p>T-MLM: " + message + "</p>";
-        }
-
-        chatBox.appendChild(messageElement);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
 </script>
 
 </html>

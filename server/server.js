@@ -1,3 +1,4 @@
+const express =  require('express');
 const mongoose = require('mongoose');
 const app = require('./app');
 const { EventEmitter } = require('events');
@@ -38,6 +39,8 @@ const chatRoutes = require("./routes/chat"); // Importing chat routes
 // ROUTES MIDDLEWARE
 app.use("/", userRoutes);
 app.use("/chat", chatRoutes);
+app.use('/assets', express.static('assets'));
+
 
 // 404
 app.use((req, res, next) => {
