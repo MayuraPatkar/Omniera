@@ -1,4 +1,4 @@
 node_modules/
 *.pt
-*.json
+tokenizer.json
 fonts/
