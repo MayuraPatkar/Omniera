@@ -19,7 +19,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(to right, #97a6c9, #394150);
+            background: linear-gradient(to right, #242059, #12102c);
             flex-direction: column;
         }
 
@@ -191,6 +191,32 @@
         </div>
     </div>
 </body>
+<script>
+    document.getElementById("email").addEventListener("input", validateEmail);
+
+    function validateEmail() {
+        const email = document.getElementById("email").value.trim();
+        const patEmail = /^(\w+([-+.]\w+)@\w+([-.]\w+)\.\w+([-.]\w+)*)$/;
+        if (email === "") {
+            showError("email", "Email is required.");
+            return false;
+        }
+        if (!patEmail.test(email)) {
+            showError("email", "Email must end with @manipal.edu or a subdomain like @anything.manipal.edu");
+            return false;
+        }
+        clearError("email");
+        return true;
+    }
+
+    function showError(id, msg) {
+        document.getElementById(`${id} - error`).innerHTML = msg;
+    }
+
+    function clearError(id) {
+        document.getElementById(`${id} - error`).innerHTML = '';
+    }
+</script>
 <script>
     document.getElementById("loginForm").addEventListener("submit", async function (event) {
         event.preventDefault();

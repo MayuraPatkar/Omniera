@@ -19,7 +19,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(to right, #97a6c9, #394150);
+            background: linear-gradient(to right, #242059, #12102c);
             flex-direction: column;
         }
 
@@ -38,7 +38,7 @@
             background: #1c2b40;
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
             width: 350px;
             color: white;
             text-align: center;
@@ -103,7 +103,7 @@
         }
 
         .actions button:hover {
-            background: linear-gradient(to left, #9EBBFF, #EDC83C);
+            background: linear-gradient(tot top, #9EBBFF, #EDC83C);
             transform: translateY(-2px);
         }
 
@@ -175,18 +175,22 @@
             <div class="input-group">
                 <input type="text" id="name" required placeholder=" ">
                 <label for="username">Username</label>
+                <p id="name-error"></p>
             </div>
             <div class="input-group">
                 <input type="email" id="email" required placeholder=" ">
                 <label for="email">Email</label>
+                <p id="email-error"></p>
             </div>
             <div class="input-group">
                 <input type="password" id="password" required placeholder=" ">
                 <label for="password">Password</label>
+                <p id="password-error"></p>
             </div>
             <div class="input-group">
                 <input type="password" id="confirmPassword" required placeholder=" ">
                 <label for="confirmPassword">Confirm Password</label>
+                <p id="confirm-error"></p>
             </div>
             <div class="actions">
                 <button type="submit">Signup</button>
@@ -197,6 +201,80 @@
         </div>
     </div>
 </body>
+<script>
+    document.getElementById("name").addEventListener("input", validateName);
+    document.getElementById("email").addEventListener("input", validateEmail);
+    document.getElementById("password").addEventListener("input", validatePassword);
+    document.getElementById("confirmPassword").addEventListener("input", validateConfirmPassword);
+
+    function validateName() {
+        const name = document.getElementById("name").value.trim();
+        const patName = /^[A-Za-z\s]+$/;
+        if (name === "") {
+            showError("name", "Name is required.");
+            return false;
+        }
+        if (!patName.test(name)) {
+            showError("name", "Invalid name! Only letters and spaces are allowed.");
+            return false;
+        }
+        clearError("name");
+        return true;
+    }
+
+    function validateEmail() {
+        const email = document.getElementById("email").value.trim();
+        const patEmail = /^(\w+([-+.]\w+)@\w+([-.]\w+)\.\w+([-.]\w+)*)$/;
+        if (email === "") {
+            showError("email", "Email is required.");
+            return false;
+        }
+        if (!patEmail.test(email)) {
+            showError("email", "Email must end with @manipal.edu or a subdomain like @anything.manipal.edu");
+            return false;
+        }
+        clearError("email");
+        return true;
+    }
+
+    function validatePassword() {
+        const password = document.getElementById("password").value.trim();
+        const patPassword = /^((?=.[A-Z])(?=.[a-z])(?=.[0-9])(?=.[!@#$%^&*-+]).{8,})$/;
+        if (password === "") {
+            showError("password", "Password is required.");
+            return false;
+        }
+        if (!patPassword.test(password)) {
+            showError("password", "Password must be at least 8 characters, include uppercase, lowercase, digit, and special character.");
+            return false;
+        }
+        clearError("password");
+        return true;
+    }
+
+    function validateConfirmPassword() {
+        const password = document.getElementById("password").value.trim();
+        const confirmPassword = document.getElementById("password1").value.trim();
+        if (confirmPassword === "") {
+            showError("confirmPassword", "Please confirm your password.");
+            return false;
+        }
+        if (password !== confirmPassword) {
+            showError("confirmPassword", "Passwords do not match!");
+            return false;
+        }
+        clearError("password1");
+        return true;
+    }
+
+    function showError(id, msg) {
+        document.getElementById(`${id} - error`).innerHTML = msg;
+    }
+
+    function clearError(id) {
+        document.getElementById(`${id} - error`).innerHTML = '';
+    }
+</script>
 <script>
     document.getElementById("signupForm").addEventListener("submit", async function (event) {
         event.preventDefault();

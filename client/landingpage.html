@@ -16,7 +16,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #16102c;
+            background-color: #12102c;
             height: 100vh;
             font-family: 'Pixelify Sans', sans-serif;
             scroll-behavior: smooth;
@@ -49,19 +49,12 @@
             color: white;
             text-decoration: none;
             font-size: 1.5rem;
+            cursor: pointer;
         }
 
         .container-1 {
             width: 100vw;
             height: 55vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container-2 {
-            width: 100vw;
-            height: 10vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -77,6 +70,15 @@
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: -2;
+        }
+
+        .container-2 {
+            width: 100vw;
+            height: 10vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .start_button {
@@ -86,9 +88,26 @@
             border-radius: 5px;
             font-family: 'Pixelify Sans', sans-serif;
             font-size: 1.1em;
-            font-weight: 1.7%;
             background: linear-gradient(to left, #9EBBFF, #EDC83C);
-            box-shadow: 0px 0px 10px 3px #EDC83C;
+            cursor: pointer;
+        }
+
+        .container-3 {
+            height: 400px;
+            width: 100vw;
+            background-color: #d0cfe2;
+        }
+
+        .container-4 {
+            height: 400px;
+            width: 100vw;
+            background-color: #0cff18;
+        }
+
+        .container-5 {
+            height: 400px;
+            width: 100vw;
+            background-color: #bf2c04;
         }
     </style>
 </head>
@@ -101,8 +120,9 @@
         <div class="omnira_p_logo"><img src="../assets/Omniera_p_logo.png" alt="logo"></div>
         <div id="animation-container-2" class="background-clip"></div>
     </div>
-    <div class="container-2"><button class="start_button">Start your new Conversation</button></div>
-
+    <div class="container-2">
+        <button class="start_button" onclick="window.location='/signup'">Start your newConversation</button>
+    </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.8/lottie.min.js"></script>
 <script>

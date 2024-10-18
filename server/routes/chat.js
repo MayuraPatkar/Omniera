@@ -201,7 +201,7 @@ router.post('/get_chat_history', async (req, res) => {
             return res.status(200).json({ status: "notFound", message: "No chat history" });
         }
 
-        const history = await chatHistory.find({ chat: chatSession._id }).sort({ time: -1 });
+        const history = await chatHistory.find({ chat: chatSession._id })
 
         const formattedHistory = history.map(chat => ({
             prompt: chat.conversation.user,

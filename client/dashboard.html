@@ -4,15 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap">
+
     <title>Chatbot Home</title>
     <style>
         body {
-            font-family: "Roboto", sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #727D95;
+            background-color: #12102c;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -29,6 +28,7 @@
             color: white;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             box-sizing: border-box;
+            font-family: 'Pixelify Sans', sans-serif;
         }
 
         .logo {
@@ -46,21 +46,23 @@
             margin: 0;
             margin-right: 80px;
             font-size: 2em;
+            font-family: 'Pixelify Sans', sans-serif;
         }
 
         .profile-btn {
-            background-color: white;
             color: #000000;
-            border: 2px solid white;
             border-radius: 5px;
-            padding: 8px 12px;
+            width: 50px;
+            height: 50px;
             cursor: pointer;
             text-decoration: none;
             font-weight: bold;
+
         }
 
-        .profile-btn:hover {
-            background-color: #f4f4f4;
+        .profile-btn img {
+            height: 100%;
+            object-fit: contain;
         }
 
         .dashboard {
@@ -70,18 +72,6 @@
             justify-content: space-evenly;
             flex-wrap: wrap;
             box-sizing: border-box;
-        }
-
-        .chats{
-            width: 25%;
-            height: 30vh;
-            background-color:#82a9cf;
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
         }
 
         .initdiv {
@@ -96,10 +86,11 @@
             border-radius: 10px;
             cursor: pointer;
             text-align: center;
+            font-family: 'Pixelify Sans', sans-serif;
         }
 
         .initdiv button {
-            background-color: #b3c6f1;
+            background: linear-gradient(to left, #9EBBFF, #EDC83C);
             border: none;
             width: 20%;
             font-size: 2rem;
@@ -107,6 +98,45 @@
             height: 10%;
             border-radius: 10px;
             cursor: pointer;
+            font-family: 'Pixelify Sans', sans-serif;
+        }
+
+        .chats {
+            width: 25%;
+            height: 30vh;
+            background-color: #82a9cf;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Pixelify Sans', sans-serif;
+        }
+
+        .chats button {
+            width: 40%;
+            height: 20%;
+            background: linear-gradient(to left, #9EBBFF, #EDC83C);
+            border: 1px solid black;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .new-1 {
+            background-color: red;
+            width: 3%;
+            height: 30%;
+            border-radius: 20px;
+        }
+
+        .new-2 {
+            position: relative;
+            bottom: 18%;
+            background-color: red;
+            width: 20%;
+            height: 5%;
+            border-radius: 20px;
+            z-index: 1;
         }
     </style>
 </head>
@@ -118,7 +148,7 @@
             <img src="./../assets/Logo.png" alt="logo">
         </div>
         <h1>Your Queries</h1>
-        <a href="/profile" class="profile-btn">Profile</a>
+        <a href="/profile" class="profile-btn"><img src="../assets/user.png" alt="user_icon"></a>
     </div>
 
     <div class="dashboard">
@@ -136,25 +166,21 @@
             const data = await response.json();
 
             if (data.chats.length != 0) {
-                dashboard.innerHTML = '<div class="chats" onclick="window.location=\'/chat\'"><h2>New Conversation</h2></div>';
+                dashboard.innerHTML = '<div class="chats" onclick="window.location=\'/chat\'"><h2>New Conversation</h2><div class="new-1"></div><div class="new-2"></div></div>';
                 data.chats.forEach((chat, index) => {
                     const historyDiv = document.createElement('div');
-                    const historyDelete = document.createElement('button');
+                    const historyOpen = document.createElement('button');
                     const lastModified = new Date(chat.conversation.time).toLocaleString();
 
-                    historyDelete.innerText = 'Delete';
-                    historyDelete.onclick = (event) => {
-                        event.stopPropagation();
-                        deleteChat(chat.session, historyDiv);
-                    };
+                    historyOpen.innerText = 'Open';
                     historyDiv.classList = "chats";
                     historyDiv.innerHTML = `
                         <h2>${chat.conversation.title}</h2>
                         <p>Last modified: ${lastModified}</p>
                         <input type='hidden' value='${chat.session}' id='chatSession' name='session'>
                     `;
-                    historyDiv.onclick = () => window.location = `/chat/${chat.session}`;
-                    historyDiv.appendChild(historyDelete);
+                    historyOpen.onclick = () => window.location = `/chat/${chat.session}`;
+                    historyDiv.appendChild(historyOpen);
                     dashboard.appendChild(historyDiv);
 
                 });

@@ -13,7 +13,7 @@
             font-family: "Roboto", sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #727D95;
+            background-color: #12102c;
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -57,7 +57,6 @@
         .settings {
             width: 40px;
             height: 40px;
-            background-color: #727D95;
             border-radius: 7px;
             display: flex;
             justify-content: center;
@@ -67,16 +66,9 @@
             transition: background-color 0.3s ease;
         }
 
-        .settings:hover {
-            background-color: #636e82;
-        }
-
-        .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: #f4f4f4;
-            margin: 0 1px;
+        .settings img{
+            height: 100%;
+            object-fit: contain;
         }
 
         .settings-buttton {
@@ -364,9 +356,7 @@
         </div>
         <input type="text" class="title" id="title" value="New Chat 1" autocomplete="off" readonly="true">
         <div class="settings" id="settings">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
+            <img src="../assets/settings.png" alt="settings_icon">
         </div>
     </div>
     <div class="settings-buttton" id="settings-buttton">
