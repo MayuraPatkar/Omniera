@@ -4,117 +4,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap">
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pixelify Sans', sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #2e2e2e;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            background: linear-gradient(to right, #97a6c9, #394150);
+            flex-direction: column;
         }
 
-        .login-container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-
-        h2 {
-            text-align: center;
+        .logo {
+            width: 220px;
+            height: 80px;
             margin-bottom: 20px;
         }
 
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .logo img {
+            height: 100%;
+            object-fit: contain;
         }
 
-        .btn {
-            width: 100%;
-            background-color: #007BFF;
+
+        .login-container {
+            background: #1c2b40;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            width: 350px;
             color: white;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
-        .signup-link {
             text-align: center;
-            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .signup-link a {
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background: #2b3e50;
+            border: 1px solid #4f5b7a;
+            border-radius: 10px;
+            color: white;
+            outline: none;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #00aaff;
+            background: #1c2b40;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            color: #808db1;
+            pointer-events: none;
+            transition: 0.3s ease all;
+        }
+
+        .input-group input:focus~label,
+        .input-group input:not(:placeholder-shown)~label {
+            top: -20px;
+            left: 12px;
+            font-size: 12px;
+            color: #00aaff;
+        }
+
+        .actions button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #9EBBFF, #EDC83C);
+            border: none;
+            border-radius: 10px;
+            color: rgb(0, 0, 0);
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .actions button:hover {
+            background: linear-gradient(to left, #9EBBFF, #EDC83C);
+            transform: translateY(-2px);
+        }
+
+        .links {
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: #00aaff;
             text-decoration: none;
-            color: #007BFF;
+            font-size: 14px;
+            display: block;
+            margin: 5px 0;
+            transition: color 0.3s ease;
         }
 
-        .signup-link a:hover {
+        .links a:hover {
+            color: #ffffff;
             text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                width: 90%;
+                padding: 30px;
+            }
+
+            .input-group input {
+                padding: 10px;
+            }
+
+            .actions button {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .login-container h2 {
+                font-size: 20px;
+            }
+
+            .links a {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .login-container h2 {
+                font-size: 18px;
+            }
+
+            .input-group input {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 
 <body>
-
+    <div class="logo"><img src="../assets/Logo.png" alt="logo"></div>
     <div class="login-container">
         <h2>Login</h2>
-        <form id="loginForm">
-            <input type="email" id="email" placeholder="email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit" class="btn">Login</button>
+        <form id="loginForm" method="post">
+            <div class="input-group">
+                <input type="email" id="email" required placeholder=" ">
+                <label for="email">Email</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" required placeholder=" ">
+                <label for="password">Password</label>
+            </div>
+            <div class="actions">
+                <button type="submit">Login</button>
+            </div>
         </form>
-        <div class="signup-link">
-            <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+        <div class="links">
+            <a href="/signup">Don't have an account? Sign up</a>
         </div>
     </div>
-
-    <script>
-        document.getElementById("loginForm").addEventListener("submit", async function (event) {
-            event.preventDefault();
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-
-            const formData = {
-                email: email,
-                password: password
-            };
-
-            try {
-                const response = await fetch("/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    window.location.href = "/";
-                } else {
-                    alert("Login failed! Check your credentials.");
-                }
-            } catch (error) {
-                console.error("Error:", error);
-                alert("An error occurred during login.");
-            }
-        });
-    </script>
-
 </body>
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const formData = {
+            email: email,
+            password: password
+        };
+
+        try {
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                window.location.href = "/";
+            } else {
+                alert("Login failed! Check your credentials.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred during login.");
+        }
+    });
+</script>
 
 </html>
