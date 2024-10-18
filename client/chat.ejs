@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../assets/logo_O.png" type="image/x-icon">
-    <link rel="stylesheet" href="./global.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap">
+    <!-- <link rel="stylesheet" href="./global.css"> -->
     <title>new chat</title>
     <style>
         body {
@@ -50,7 +51,7 @@
             color: white;
             margin: auto;
             margin-left: 25%;
-
+            font-family: 'Pixelify Sans', sans-serif;
         }
 
         .settings {
@@ -106,6 +107,7 @@
             font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            font-family: 'Pixelify Sans', sans-serif;
         }
 
         .settings-buttton button:hover {
@@ -129,6 +131,11 @@
             overflow-y: auto;
             color: white;
             box-sizing: border-box;
+            padding-bottom: 1%;
+        }
+
+        .chat-box::-webkit-scrollbar {
+            display: none;
         }
 
         .logo_O {
@@ -169,15 +176,32 @@
             padding: 1%;
             border-radius: 10px;
             display: flex;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
         }
+
+        .user-message img {
+            width: 25px;
+            height: 25px;
+            margin: auto;
+            margin-right: 20px;
+        }
+
+
 
         .ai-message {
             width: fit-content;
             padding: 1%;
             border-radius: 10px;
             display: flex;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            background-color: #3d566e;
+        }
+
+        .ai-message img {
+            width: 25px;
+            height: 25px;
+            margin: auto;
+            margin-right: 20px;
         }
 
         .bot-message {
@@ -223,6 +247,7 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
+            font-family: 'Pixelify Sans', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -337,7 +362,7 @@
         <div class="logo" onclick="window.location = '/'">
             <img src="./../assets/Logo.png" alt="logo">
         </div>
-        <input type="text" class="title" id="title" value="New Chat 1" autocomplete="off">
+        <input type="text" class="title" id="title" value="New Chat 1" autocomplete="off" readonly="true">
         <div class="settings" id="settings">
             <div class="dot"></div>
             <div class="dot"></div>
@@ -405,6 +430,10 @@
 
     settingsButton.addEventListener('click', settingButtonClickHandler);
 
+    function edit_title() {
+        const title = document.getElementById('title');
+        title.setAttribute.readonly = false;
+    }
 
 
     form.addEventListener('submit', function (event) {
@@ -475,7 +504,12 @@
             const formData = new FormData();
             formData.append('conversationTitle', title);
             formData.append('prompt', prompt);
-            formData.append('chatSessionId', chatSession);
+            if (chatSession != 'chat') {
+                formData.append('chatSessionId', chatSession);
+            }
+            else {
+                formData.append('chatSessionId', '');
+            }
 
             appendMessage('user', prompt);
             sendPrompt(formData, animationInstance);
@@ -491,6 +525,14 @@
     function appendMessageWordByWord(sender, message) {
         const messageElement = document.createElement('div');
         messageElement.classList.add(sender + '-message');
+
+        if (sender === 'ai') {
+            const aiIcon = document.createElement('img');
+            aiIcon.src = "../assets/logo_O.png";
+            aiIcon.classList.add('ai-icon');
+            messageElement.appendChild(aiIcon);
+        }
+
         const p = document.createElement('p');
         messageElement.appendChild(p);
         chatBox.appendChild(messageElement);
@@ -508,6 +550,7 @@
             }
         }, 100);
     }
+
 
     function sendPrompt(formData, animationInstance) {
         const xhr = new XMLHttpRequest();
@@ -550,11 +593,27 @@
     function appendMessage(sender, message) {
         const messageElement = document.createElement('div');
         messageElement.classList.add(sender + '-message');
-        messageElement.innerHTML = `<p>${message}</p>`;
 
+        const userIcon = document.createElement('img');
+        const messageText = document.createElement('p');
+        messageText.textContent = message;
+
+        if (sender == 'user') {
+            userIcon.src = "../assets/user.png";
+            userIcon.classList.add('user-icon');
+        } else {
+            userIcon.src = "../assets/logo_O.png";
+            userIcon.classList.add('ai-icon');
+        }
+
+        messageElement.appendChild(userIcon);
+        messageElement.appendChild(messageText);
+        // const hrElement = document.createElement('hr');
         chatBox.appendChild(messageElement);
+        // chatBox.appendChild(hrElement);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
+
 
     chat_title.addEventListener('blur', () => {
         const newTitle = chat_title.value.trim();
@@ -581,7 +640,6 @@
             .then(response => {
                 if (!response.ok) {
                     console.error('Failed to update title');
-                    alert('Failed to update the title. Try again.');
                 }
             })
             .catch(error => {

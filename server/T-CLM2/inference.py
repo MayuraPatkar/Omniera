@@ -21,6 +21,6 @@ model, initial_epoch, global_step = load_model(config, config['device'], model, 
 def inference(text):
     idx = tokenizer.encode(text).ids
     idx = torch.tensor([idx]).to(config['device'])
-    generated_sequence = model.generate(idx, max_new_tokens=20, seq_len=config['seq_len'], temperature=config['temperature'], top_k=config['top_k'])
+    generated_sequence = model.generate(idx, max_new_tokens=100, seq_len=config['seq_len'], temperature=config['temperature'], top_k=config['top_k'])
     predicted_text = tokenizer.decode(generated_sequence[0].cpu().numpy())
     return predicted_text

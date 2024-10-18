@@ -9,7 +9,7 @@ def get_config():
         "head": 12,
         "d_ff": 3072,
         "dropout": 0.1,
-        "temperature": 0.7,
+        "temperature": 1.5,
         "top_k": 50,
         "device": "cuda" if torch.cuda.is_available() else "cpu",
         "model_file_path": "T-CLM2.pt",

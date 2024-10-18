@@ -6,7 +6,6 @@ const { spawn } = require('child_process');
 const multer = require('multer');
 const upload = multer();
 const { v4: uuidv4 } = require('uuid');
-const { status } = require("express/lib/response");
 const router = express.Router();
 
 router.use(cookieParser());
