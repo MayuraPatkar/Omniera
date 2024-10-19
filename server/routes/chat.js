@@ -118,27 +118,66 @@ router.post("/ai-response", upload.none(), async (req, res) => {
     });
 });
 
-// HANDLE TITLE
+//HANDLE UPDATE TITLE
 router.post('/update-title', async (req, res) => {
     const { sessionId, newTitle } = req.body;
 
+    // Check if title is provided
+    if (!newTitle) {
+        return res.status(400).json({ status: 'error', message: 'Title is required' });
+    }
+
+    const sessionString = req.cookies.sessionToken;
+    let userId = null;
+
+    // Check if session token exists
+    if (sessionString) {
+        try {
+            const user = await accounts.findOne({ session: sessionString });
+            if (user) {
+                userId = user._id;
+            } else {
+                return res.status(401).json({ status: "error", message: "User not found or session expired" });
+            }
+        } catch (error) {
+            console.error("Error finding user:", error);
+            return res.status(500).json({ status: "error", message: "User lookup failed" });
+        }
+    }
+
     try {
+        let chatSession = await allUserChats.findOne({ session: sessionId });
+        let chatSessionId;
 
-        const chatSession = await allUserChats.findOneAndUpdate(
-            { session: sessionId },
-            { $set: { 'conversation.title': newTitle } }
-        );
+        if (chatSession) {
+            await allUserChats.findOneAndUpdate(
+                { session: sessionId },
+                { $set: { 'conversation.title': newTitle } }
+            );
+            chatSessionId = chatSession.session;
+        } else {
+            const newSessionId = uuidv4();
 
-        if (!chatSession) {
-            return res.status(404).json({ status: 'error', message: 'Chat session not found' });
+            const newChatSession = new allUserChats({
+                user: userId,
+                session: newSessionId,
+                conversation: {
+                    title: newTitle,
+                    time: new Date(),
+                },
+            });
+
+            await newChatSession.save();
+            chatSessionId = newSessionId;
         }
 
-        res.status(200).json({ status: 'success', message: 'Title updated' });
+        res.status(200).json({ status: 'success', message: 'Title updated', chatSessionId });
     } catch (error) {
         console.error('Error updating title:', error);
         res.status(500).json({ status: 'error', message: 'Failed to update title' });
     }
 });
+
 
 // HANDLE LOAD ALL CHATS
 router.get("/chat-history", async (req, res) => {
@@ -198,21 +237,26 @@ router.post('/get_chat_history', async (req, res) => {
         const chatSession = await allUserChats.findOne({ session, user: userId });
 
         if (!chatSession) {
-            return res.status(200).json({ status: "notFound", message: "No chat history" });
+            return res.status(200).json({ status: "notFound", message: "No chat history", title: '' });
         }
-
         const history = await chatHistory.find({ chat: chatSession._id })
 
-        const formattedHistory = history.map(chat => ({
-            prompt: chat.conversation.user,
-            response: chat.conversation.ai,
-        }));
+        if (chatSession && history <= 0) {
+            return res.status(200).json({ status: "notFound", message: "No chat history", title: chatSession.conversation.title });
+        } else {
+            const formattedHistory = history.map(chat => ({
+                prompt: chat.conversation.user,
+                response: chat.conversation.ai,
+            }));
 
-        return res.status(200).json({
-            status: "success",
-            title: chatSession.conversation.title,
-            history: formattedHistory,
-        });
+            return res.status(200).json({
+                status: "success",
+                title: chatSession.conversation.title,
+                history: formattedHistory,
+            });
+
+        }
+
 
     } catch (error) {
         console.error("Error fetching chat history:", error);

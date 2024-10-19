@@ -94,7 +94,7 @@
         handleFormSubmit(animationInstance);
     });
 
-    function loadChatHistory() {
+    function loadChatHistory(session) {
         fetch('/chat/get_chat_history', {
             method: 'POST',
             headers: {
@@ -107,20 +107,23 @@
                 const h2 = document.getElementById('h2');
                 const logo_O = document.getElementById('logo_O');
                 if (data.status === 'notFound') {
-                    return;
-                }
-
-                chat_title.value = data.title;
-                chatBox.innerHTML = '';
-
-                if (data.history && data.history.length > 0) {
-                    data.history.forEach(chat => {
-                        appendMessage('user', chat.prompt);
-                        appendMessage('ai', chat.response);
-                    });
+                    if (data.title) {
+                        chat_title.value = data.title;
+                    }
                 } else {
-                    h2.style.display = 'block';
-                    logo_O.style.display = 'block';
+                    console.log("dsfdfsd")
+                    chat_title.value = data.title;
+                    chatBox.innerHTML = '';
+
+                    if (data.history && data.history.length > 0) {
+                        data.history.forEach(chat => {
+                            appendMessage('user', chat.prompt);
+                            appendMessage('ai', chat.response);
+                        });
+                    } else {
+                        h2.style.display = 'block';
+                        logo_O.style.display = 'block';
+                    }
                 }
             })
             .catch(error => {
@@ -129,7 +132,7 @@
     }
 
     if (session) {
-        loadChatHistory();
+        loadChatHistory(session);
     }
 
     function handleFormSubmit(animationInstance) {
@@ -158,8 +161,6 @@
             console.error('Prompt is empty!');
         }
     }
-
-
 
     function appendMessageWordByWord(sender, message) {
         const messageElement = document.createElement('div');
@@ -264,16 +265,25 @@
         })
             .then(response => {
                 if (!response.ok) {
-                    console.error('Failed to update title');
+                    throw new Error('Failed to update title');
                 }
-                else {
-                    loadChatHistory()
+                return response.json();
+            })
+            .then(data => {
+
+                if (!window.location.pathname.includes(data.chatSessionId)) {
+                    const newUrl = `/chat/${data.chatSessionId}`;
+                    window.history.replaceState({ path: newUrl }, '', newUrl);
                 }
+
+                loadChatHistory(data.chatSessionId);
             })
             .catch(error => {
                 console.error('Error updating title:', error);
+                alert('Failed to get a response. Please try again.');
             });
     }
+
 
     function settingButtonClickHandler() {
         if (settingsDropdown.classList.contains('expand-again')) {
