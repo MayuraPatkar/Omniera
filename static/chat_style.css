@@ -325,22 +325,26 @@ input[type="text"] {
 
     .header .title {
         font-size: 1.5rem;
-        margin-right: 20px;
+        margin-left: -20px;
     }
 
     .logo_O {
         width: 15%;
         height: 15%;
     }
+
+    .settings img {
+        height: 70%;
+    }
 }
 
-@media (max-width: 480px) {
+@media all and (max-width: 480px) {
     body {
         height: 90vh;
     }
 
     .header {
-        height: 7vh;
+        height: 8vh;
         width: 100vw;
     }
 
@@ -353,8 +357,28 @@ input[type="text"] {
         height: 50%;
     }
 
+    .edit_title {
+        left: 15%;
+        width: 70vw;
+        height: 20vh;
+    }
+
     .chat-box {
         width: 100vw;
+        padding: 5%;
+
+    }
+
+    .user-message {
+        font-size: 1.1rem;
+    }
+
+    .ai-message {
+        font-size: 1.1rem;
+    }
+
+    .chat-box p span {
+        display: block;
     }
 
     #chat-input {
@@ -380,6 +404,7 @@ input[type="text"] {
         width: 10%;
         height: 10%;
         top: 25%;
+        left: -2%;
     }
 
     .chat-box .mp {

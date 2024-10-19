@@ -6,144 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../assets/logo_O.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap">
-
+    <link rel="stylesheet" href="../static/dashboard_style.css">
     <title>Chatbot Home</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #12102c;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            width: 100%;
-            height: 10vh;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            background-color: #2C3E50;
-            color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            box-sizing: border-box;
-            font-family: 'Pixelify Sans', sans-serif;
-        }
-
-        .logo {
-            height: 70%;
-        }
-
-        .logo img {
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .header h1 {
-            flex-grow: 1;
-            text-align: center;
-            margin: 0;
-            margin-right: 80px;
-            font-size: 2em;
-            font-family: 'Pixelify Sans', sans-serif;
-        }
-
-        .profile-btn {
-            color: #000000;
-            border-radius: 5px;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-
-        }
-
-        .profile-btn img {
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .dashboard {
-            width: 100vw;
-            padding: 2.5%;
-            display: flex;
-            justify-content: space-evenly;
-            flex-wrap: wrap;
-            box-sizing: border-box;
-        }
-
-        .initdiv {
-            width: 80%;
-            height: 70vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 2em;
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: center;
-            font-family: 'Pixelify Sans', sans-serif;
-        }
-
-        .initdiv button {
-            background: linear-gradient(to left, #9EBBFF, #EDC83C);
-            border: none;
-            width: 20%;
-            font-size: 2rem;
-            color: rgb(0, 0, 0);
-            height: 10%;
-            border-radius: 10px;
-            cursor: pointer;
-            font-family: 'Pixelify Sans', sans-serif;
-        }
-
-        .chats {
-            width: 25%;
-            height: 30vh;
-            background-color: #82a9cf;
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Pixelify Sans', sans-serif;
-        }
-
-        .chats button {
-            width: 40%;
-            height: 20%;
-            background: linear-gradient(to left, #9EBBFF, #EDC83C);
-            border: 1px solid black;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        .new-1 {
-            background-color: red;
-            width: 3%;
-            height: 30%;
-            border-radius: 20px;
-        }
-
-        .new-2 {
-            position: relative;
-            bottom: 18%;
-            background-color: red;
-            width: 20%;
-            height: 5%;
-            border-radius: 20px;
-            z-index: 1;
-        }
-    </style>
 </head>
 
 <body>
-
     <div class="header">
         <div class="logo" onclick="window.location = '/'">
             <img src="./../assets/Logo.png" alt="logo">
@@ -151,12 +18,8 @@
         <h1>Your Queries</h1>
         <a href="/profile" class="profile-btn"><img src="../assets/user.png" alt="user_icon"></a>
     </div>
-
-    <div class="dashboard">
-    </div>
-
+    <div class="dashboard"></div>
 </body>
-
 
 <script>
     const dashboard = document.querySelector('.dashboard');
@@ -171,6 +34,8 @@
                 data.chats.forEach((chat, index) => {
                     const historyDiv = document.createElement('div');
                     const historyOpen = document.createElement('button');
+                    const bin_div = document.createElement('div');
+                    const bin = document.createElement('img');
                     const lastModified = new Date(chat.conversation.time).toLocaleString();
 
                     historyOpen.innerText = 'Open';
@@ -180,22 +45,29 @@
                         <p>Last modified: ${lastModified}</p>
                         <input type='hidden' value='${chat.session}' id='chatSession' name='session'>
                     `;
+                    bin_div.classList = "bin-div";
+                    bin.src = '../assets/bin.png';
+                    bin.classList = "bin";
                     historyOpen.onclick = () => window.location = `/chat/${chat.session}`;
+                    bin_div.appendChild(bin);
+
+                    bin_div.onclick = () => deleteChat(chat.session, historyDiv);
+
+                    historyDiv.appendChild(bin_div);
                     historyDiv.appendChild(historyOpen);
                     dashboard.appendChild(historyDiv);
-
                 });
 
             } else {
-                dashboard.innerHTML = '<div class="initdiv"><h1>Start your New conversation</h1><button onclick="window.location=\'/chat\'">Start</div></button>';
+                dashboard.innerHTML = '<div class="initdiv"><h1>Start your New conversation</h1><button onclick="window.location=\'/chat\'">Start</button></div>';
             }
         } catch (error) {
             console.error('Failed to fetch chat history:', error);
         }
-    }
+    };
 
     function deleteChat(sessionId, chatDiv) {
-        fetch('http://localhost:3000/chat/delete-chat', {
+        fetch('/chat/delete-chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -216,7 +88,5 @@
             });
     }
 </script>
-
-
 
 </html>

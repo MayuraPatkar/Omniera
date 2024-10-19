@@ -35,7 +35,7 @@
     <div class="chat-container">
         <div class="chat-box" id="chat-box">
             <div class="logo_O" id="logo_O"><img src="../assets/logo_O.png" alt="logo"></div>
-            <p id="h2" class="mp">Hello I'm <span><img src="../assets/logo_name.png"></span>, How can I help you today?
+            <p id="h2" class="mp">Hello I'm <span><img src="../assets/logo_name.png">, </span>How can I help you today?
             </p>
         </div>
         <div class="user-input">
@@ -194,7 +194,7 @@
 
     function sendPrompt(formData, animationInstance) {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:3000/chat/ai-response/');
+        xhr.open('POST', 'https://7868ff61-3000.inc1.devtunnels.ms/chat/ai-response/');
 
         xhr.onload = function () {
             if (xhr.status === 200) {
@@ -253,7 +253,7 @@
     }
 
     function updateChatTitle(sessionId, newTitle) {
-        fetch('http://localhost:3000/chat/update-title', {
+        fetch('https://7868ff61-3000.inc1.devtunnels.ms/chat/update-title', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
