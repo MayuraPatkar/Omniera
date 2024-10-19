@@ -101,10 +101,25 @@
         }
 
         .container-3 {
-            height: 100vh;
+            height: 95vh;
             width: 100vw;
             padding: 5%;
             box-sizing: border-box;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: column;
+            /* border: 2px solid yellow; */
+        }
+        .main-title-1{
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            color: white;
+            font-size: 3.5rem;
+            /* font-family: 'arial'; */
+        }
+        .main-1{
             display: flex;
             justify-content: space-evenly;
             align-items: center;
@@ -120,6 +135,29 @@
             text-align: center;
         }
 
+        .content-1{
+            height: 100%;
+        }
+        .content-2{
+            height: 100%;
+        }
+        .content-3{
+            height: 100%;
+        }
+
+        .setting{
+            display: flex;
+            justify-content: center;
+            padding: 4vh;
+            margin-top: 2vh;
+        }
+
+        .setting img{
+            height: 30%;
+            width: 30%;
+        }
+   
+
         /* Model Results Section Styles */
         .container-4 {
             height: 100vh;
@@ -131,10 +169,35 @@
             align-items: center;
             flex-direction: column;
             color: white;
+            /* border: 2px solid yellow; */
+        }
+
+        .main-2{
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            /* border: 2px solid rgb(130, 130, 26); */
+            height: 60vh;
+        }
+
+        .main-title-2{
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            color: white;
+            font-size: 2.2rem;
+            padding-bottom: 15vh;
+            /* border: 2px solid yellow; */
+
+            /* font-family: 'arial'; */
         }
 
         .content-4{
             width: 75%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .container-4 h3 {
@@ -186,6 +249,47 @@
             text-align: left;
         }
 
+        .container-6{
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+            background-color: #12102c;
+            /* border: 1px solid wheat; */
+
+        }
+        .main-3{
+            height: 80vh;
+            width: 100vw;
+            display: flex;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+
+        }
+
+        .elements{
+            flex-shrink: 0;
+            height: 30vh;
+            width: 40%;
+            border: 2px solid rgb(223, 223, 223);
+            background-color: #2c1d68;
+            padding: 20px;
+            margin-top: 80px;
+            border-radius: 50px;
+            box-shadow:  0px 10px 0px rgb(10, 10, 105);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .title-6{
+            display: flex;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+        }
+
         footer {
             width: 100vw;
             height: 70vh;
@@ -205,6 +309,7 @@
             flex-direction: column;
             font-size: 1.5rem;
         }
+        
     </style>
 </head>
 
@@ -224,26 +329,69 @@
             to assist, engage, and connect with you like never before.</h2>
         <button class="start_button" onclick="window.location='/signup'">Start your new Conversation</button>
     </section>
+    
 
     <section class="container-3" id="container-3">
+        <div class="main-title-1">
+            <p>features that powers omniera</p>
+        </div>
+        <div class="main-1">
         <div class="content content-1">
+            <div class="setting"><img src="../assets/settings.png" alt="logo" srcset=""></div>
             <h3>AI-Powered Conversations</h3>
             <p>Omniera provides state-of-the-art AI chat capabilities, making every conversation feel natural and
                 intelligent.</p>
         </div>
         <div class="content content-2">
+            <div class="setting"><img src="../assets/settings.png" alt="logo" srcset=""></div>
             <h3>Secure and Private</h3>
             <p>Your conversations are encrypted, ensuring complete privacy and security.</p>
+
         </div>
         <div class="content content-3">
+            <div class="setting"><img src="../assets/settings.png" alt="logo" srcset=""></div>
             <h3>24/7 Assistance</h3>
             <p>Need help? Omniera is available anytime, anywhere, ready to assist with any query or task.</p>
+            
+
         </div>
+        </div>
+    </section>
+
+    <section class="container-6" id="container-6">
+        <div class="title-6">
+            <h1>features of omniera</h1>
+        </div>
+        <div class="main-con">
+        <div class="main-3">
+            <div class="elements ele-1 left ">
+                <p>1Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt, libero.</p>
+            </div>
+            <div class="elements ele-1 right">
+                <p>2Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt, libero.</p>
+
+            </div>
+            <div class="elements ele-2 left ">
+                <p>3Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt, libero.</p>
+
+            </div>
+            <div class="elements ele-2 right">
+                <p>4Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt, libero.</p>
+
+            </div>
+        </div>
+        </div>
+
     </section>
 
     <!-- Model Results Section -->
     <section class="container-4" id="container-4">
+        <div class="main-title-2">
+            <h1>results of project omniera</h1>
+        </div>
+        <div class="main-2">
         <div class="content content-4">
+
             <h3>Model Results</h3>
             <p><strong>Accuracy:</strong> 92.5%</p>
             <p><strong>Response Time:</strong> 0.8 seconds per query</p>
@@ -252,6 +400,7 @@
             <p>Our model has been fine-tuned on conversational data, achieving a high accuracy rate and ensuring fast
                 response times for real-time interactions. We've also optimized the model for multilingual support,
                 allowing it to converse across multiple languages seamlessly.</p>
+        </div>
         </div>
     </section>
 
@@ -270,6 +419,8 @@
         </div>
     </section>
 
+   
+
     <footer>
         <div class="footer-1">
             <p>About us</p>
@@ -282,7 +433,11 @@
             <p>Explore</p>
         </div>
     </footer>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../static/landing.js">
+    </script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.8/lottie.min.js"></script>
     <script>
         var animation2 = lottie.loadAnimation({
