@@ -40,7 +40,7 @@ const chatRoutes = require("./routes/chat"); // Importing chat routes
 app.use("/", userRoutes);
 app.use("/chat", chatRoutes);
 app.use('/assets', express.static('assets'));
-
+app.use('/static', express.static('static'));
 
 // 404
 app.use((req, res, next) => {

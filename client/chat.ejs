@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../assets/logo_O.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap">
-    <!-- <link rel="stylesheet" href="./global.css"> -->
+    <link rel="stylesheet" href="../css/global.css">
     <title>new chat</title>
     <style>
         body {
@@ -66,7 +66,7 @@
             transition: background-color 0.3s ease;
         }
 
-        .settings img{
+        .settings img {
             height: 100%;
             object-fit: contain;
         }
@@ -114,6 +114,59 @@
             justify-content: flex-end;
             flex-grow: 1;
             overflow: hidden;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9;
+            display: none;
+        }
+
+        .overlay.show {
+            display: block;
+            filter: blur(5px);
+            transition: filter 0.3s ease;
+        }
+
+
+        .edit_title {
+            position: absolute;
+            top: 35vh;
+            left: 35vw;
+            background-color: #2C3E50;
+            border: 1px solid #93a0bc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 30vw;
+            height: 30vh;
+            z-index: 2000;
+            padding: 10px 0;
+            display: none;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .edit_title label {
+            color: white;
+            font-size: 1.9rem;
+        }
+
+        .edit_title input[type="text"] {
+            width: 80%;
+            height: 30%;
+            border: 2px solid white;
+            font-size: 1.7rem;
+            padding: 1%;
+        }
+
+        .edit_title.show {
+            display: flex;
         }
 
         .chat-box {
@@ -349,20 +402,26 @@
 </head>
 
 <body>
+    <div class="overlay" id="overlay" onclick="edit_title()"></div>
 
     <div class="header">
         <div class="logo" onclick="window.location = '/'">
             <img src="./../assets/Logo.png" alt="logo">
         </div>
-        <input type="text" class="title" id="title" value="New Chat 1" autocomplete="off" readonly="true">
+        <input type="text" class="title" id="title" value="New Chat" autocomplete="off" readonly="true">
         <div class="settings" id="settings">
             <img src="../assets/settings.png" alt="settings_icon">
         </div>
     </div>
     <div class="settings-buttton" id="settings-buttton">
-        <button class="setting-button" id="edit_title" onclick="edit_title()">Edit title</button>
+        <button class="setting-button" id="edit_title_btn" onclick="edit_title()">Edit title</button>
         <button class="setting-button" id="clear-chat" onclick="clear_chat()">Clear chat</button>
         <button class="setting-button" id="go_back" onclick="window.location='/'">Go Back</button>
+    </div>
+    <div class="background_blur"></div>
+    <div class="edit_title" id="edit_title">
+        <label>Edit Title</label>
+        <input type="text" id="edited_title">
     </div>
 
     <div class="chat-container">
@@ -390,6 +449,7 @@
     const form = document.getElementById('chat-input');
     const user_input = document.getElementById('user_input');
     const chat_title = document.getElementById('title');
+    const edited_title = document.getElementById('edited_title');
     const buttonContent = document.getElementById('buttonContent');
     const animationContainer = document.getElementById('animation-container');
     const session = "<%= session %>";
@@ -414,15 +474,28 @@
         } else {
             settingsDropdown.classList.add('expand-again');
             settingsDropdown.classList.add('show');
-            console.log("hello");
         }
     }
 
     settingsButton.addEventListener('click', settingButtonClickHandler);
 
     function edit_title() {
-        const title = document.getElementById('title');
-        title.setAttribute.readonly = false;
+        const editTitleDropdown = document.getElementById('edit_title');
+        const overlay = document.getElementById('overlay');
+        const bodyContent = document.querySelector('body');
+
+        if (editTitleDropdown.classList.contains('show')) {
+            editTitleDropdown.classList.remove('show');
+            overlay.classList.remove('show');
+            bodyContent.classList.remove('blur-background');
+        } else {
+            editTitleDropdown.classList.add('show');
+            overlay.classList.add('show');
+            bodyContent.classList.add('blur-background');
+            settingsDropdown.classList.remove('expand-again');
+            settingsDropdown.classList.remove('show');
+            edited_title.focus();
+        }
     }
 
 
@@ -598,21 +671,17 @@
 
         messageElement.appendChild(userIcon);
         messageElement.appendChild(messageText);
-        // const hrElement = document.createElement('hr');
         chatBox.appendChild(messageElement);
-        // chatBox.appendChild(hrElement);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
 
-    chat_title.addEventListener('blur', () => {
-        const newTitle = chat_title.value.trim();
+    edited_title.addEventListener('blur', () => {
+        const newTitle = edited_title.value.trim();
 
         if (newTitle) {
             const sessionId = window.location.pathname.split('/').pop();
             updateChatTitle(sessionId, newTitle);
-        } else {
-            alert('Title cannot be empty.');
         }
     });
 
@@ -630,6 +699,9 @@
             .then(response => {
                 if (!response.ok) {
                     console.error('Failed to update title');
+                }
+                else {
+                    loadChatHistory()
                 }
             })
             .catch(error => {
