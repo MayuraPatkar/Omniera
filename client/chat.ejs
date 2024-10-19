@@ -6,399 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../assets/logo_O.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap">
-    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../static/chat_style.css">
     <title>new chat</title>
-    <style>
-        body {
-            font-family: "Roboto", sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #12102c;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            width: 100vw;
-        }
-
-        .header {
-            width: 100%;
-            height: 10vh;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            background-color: #2C3E50;
-            color: white;
-            box-sizing: border-box;
-        }
-
-        .logo {
-            height: 70%;
-        }
-
-        .logo img {
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .header .title {
-            font-family: "Roboto", sans-serif;
-            background: none;
-            width: fit-content;
-            border: none;
-            font-size: 2.3rem;
-            text-align: center;
-            color: white;
-            margin: auto;
-            margin-left: 25%;
-            font-family: 'Pixelify Sans', sans-serif;
-        }
-
-        .settings {
-            width: 40px;
-            height: 40px;
-            border-radius: 7px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            position: relative;
-            transition: background-color 0.3s ease;
-        }
-
-        .settings img {
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .settings-buttton {
-            display: none;
-            position: absolute;
-            top: 60px;
-            right: 20px;
-            background-color: #2C3E50;
-            border: 1px solid #93a0bc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 150px;
-            z-index: 1000;
-            padding: 10px 0;
-        }
-
-        .settings-buttton.show {
-            display: block;
-        }
-
-        .settings-buttton button {
-            background-color: transparent;
-            border: none;
-            color: #fff;
-            padding: 10px;
-            text-align: left;
-            width: 100%;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-family: 'Pixelify Sans', sans-serif;
-        }
-
-        .settings-buttton button:hover {
-            background-color: #3B4D61;
-        }
-
-        .chat-container {
-            height: 100%;
-            font-family: "Roboto", sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            flex-grow: 1;
-            overflow: hidden;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 9;
-            display: none;
-        }
-
-        .overlay.show {
-            display: block;
-            filter: blur(5px);
-            transition: filter 0.3s ease;
-        }
-
-
-        .edit_title {
-            position: absolute;
-            top: 35vh;
-            left: 35vw;
-            background-color: #2C3E50;
-            border: 1px solid #93a0bc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 30vw;
-            height: 30vh;
-            z-index: 2000;
-            padding: 10px 0;
-            display: none;
-            justify-content: space-evenly;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .edit_title label {
-            color: white;
-            font-size: 1.9rem;
-        }
-
-        .edit_title input[type="text"] {
-            width: 80%;
-            height: 30%;
-            border: 2px solid white;
-            font-size: 1.7rem;
-            padding: 1%;
-        }
-
-        .edit_title.show {
-            display: flex;
-        }
-
-        .chat-box {
-            height: 90%;
-            width: 70vw;
-            margin: auto;
-            overflow-y: auto;
-            color: white;
-            box-sizing: border-box;
-            padding-bottom: 1%;
-        }
-
-        .chat-box::-webkit-scrollbar {
-            display: none;
-        }
-
-        .logo_O {
-            width: 10%;
-            height: 10%;
-            margin: auto;
-            position: relative;
-            top: 45%;
-        }
-
-        .logo_O img {
-            height: 100%;
-            object-fit: contain;
-            animation: logo_rotate 5s linear infinite;
-        }
-
-        @keyframes logo_rotate {
-            from {
-                transform: rotate(0);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .chat-box .mp {
-            font-size: 3rem;
-            text-align: center;
-            position: relative;
-            top: 45%;
-            font-family: "Pixelify Sans", sans-serif;
-        }
-
-        .user-message {
-            width: fit-content;
-            text-align: right;
-            padding: 1%;
-            border-radius: 10px;
-            display: flex;
-            font-size: 1.3rem;
-        }
-
-        .user-message img {
-            width: 25px;
-            height: 25px;
-            margin: auto;
-            margin-right: 20px;
-        }
-
-
-
-        .ai-message {
-            width: fit-content;
-            padding: 1%;
-            border-radius: 10px;
-            display: flex;
-            font-size: 1.3rem;
-            background-color: #3d566e;
-        }
-
-        .ai-message img {
-            width: 25px;
-            height: 25px;
-            margin: auto;
-            margin-right: 20px;
-        }
-
-        .bot-message {
-            background-color: #f4f4f4;
-            align-self: flex-start;
-        }
-
-        .user-input {
-            width: 100%;
-            height: 10%;
-        }
-
-        #chat-input {
-            width: 70vw;
-            height: 80%;
-            border-radius: 50px;
-            display: flex;
-            justify-content: space-between;
-            background-color: #2C3E50;
-            margin: auto;
-            box-sizing: border-box;
-            padding-left: 2%;
-        }
-
-        input[type="text"] {
-            width: 70%;
-            border: none;
-            outline: none;
-            color: white;
-            font-size: 1.3rem;
-            border-radius: 5px;
-            background: none;
-        }
-
-        .send-btn {
-            position: relative;
-            width: 10%;
-            height: 80%;
-            background-color: #7614fe;
-            color: white;
-            margin: auto 5px;
-            font-size: 1rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: 'Pixelify Sans', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #animation-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background-color: transparent;
-
-        }
-
-        .send-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .button-content {
-            display: flex;
-            align-items: center;
-        }
-
-        @media (max-width: 768px) {
-            .chat-box {
-                width: 90vw;
-            }
-
-            input[type="text"] {
-                width: 60%;
-            }
-
-            .send-btn {
-                width: 15%;
-                font-size: 0.8rem;
-            }
-
-            .header .title {
-                font-size: 1.5rem;
-                margin-right: 20px;
-            }
-
-            .logo_O {
-                width: 15%;
-                height: 15%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                height: 90vh;
-            }
-
-            .header {
-                height: 7vh;
-                width: 100vw;
-            }
-
-            .header .title {
-                font-size: 1.3rem;
-                width: 70%
-            }
-
-            .logo {
-                height: 50%;
-            }
-
-            .chat-box {
-                width: 100vw;
-            }
-
-            #chat-input {
-                width: 95vw;
-                height: 80%;
-            }
-
-            input[type="text"] {
-                width: 50%;
-                font-size: 1rem;
-            }
-
-            .send-btn {
-                width: 20%;
-                font-size: 0.7rem;
-            }
-
-            .header .title {
-                font-size: 1.2rem;
-            }
-
-            .logo_O {
-                width: 10%;
-                height: 10%;
-                top: 25%;
-            }
-
-            .chat-box .mp {
-                top: 25%;
-                font-size: 1.5rem;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -415,7 +24,6 @@
     </div>
     <div class="settings-buttton" id="settings-buttton">
         <button class="setting-button" id="edit_title_btn" onclick="edit_title()">Edit title</button>
-        <button class="setting-button" id="clear-chat" onclick="clear_chat()">Clear chat</button>
         <button class="setting-button" id="go_back" onclick="window.location='/'">Go Back</button>
     </div>
     <div class="background_blur"></div>
@@ -453,6 +61,8 @@
     const buttonContent = document.getElementById('buttonContent');
     const animationContainer = document.getElementById('animation-container');
     const session = "<%= session %>";
+    const settingsButton = document.getElementById('settings');
+    const settingsDropdown = document.getElementById('settings-buttton');
 
     function loadAnimation() {
         animationContainer.style.display = 'flex';
@@ -464,40 +74,6 @@
             path: "../assets/generate-animation.json"
         });
     }
-    const settingsButton = document.getElementById('settings');
-    const settingsDropdown = document.getElementById('settings-buttton');
-
-    function settingButtonClickHandler() {
-        if (settingsDropdown.classList.contains('expand-again')) {
-            settingsDropdown.classList.remove('expand-again');
-            settingsDropdown.classList.remove('show');
-        } else {
-            settingsDropdown.classList.add('expand-again');
-            settingsDropdown.classList.add('show');
-        }
-    }
-
-    settingsButton.addEventListener('click', settingButtonClickHandler);
-
-    function edit_title() {
-        const editTitleDropdown = document.getElementById('edit_title');
-        const overlay = document.getElementById('overlay');
-        const bodyContent = document.querySelector('body');
-
-        if (editTitleDropdown.classList.contains('show')) {
-            editTitleDropdown.classList.remove('show');
-            overlay.classList.remove('show');
-            bodyContent.classList.remove('blur-background');
-        } else {
-            editTitleDropdown.classList.add('show');
-            overlay.classList.add('show');
-            bodyContent.classList.add('blur-background');
-            settingsDropdown.classList.remove('expand-again');
-            settingsDropdown.classList.remove('show');
-            edited_title.focus();
-        }
-    }
-
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -517,10 +93,6 @@
         const animationInstance = loadAnimation();
         handleFormSubmit(animationInstance);
     });
-
-    if (session) {
-        loadChatHistory();
-    }
 
     function loadChatHistory() {
         fetch('/chat/get_chat_history', {
@@ -554,6 +126,10 @@
             .catch(error => {
                 console.error('Error fetching chat history:', error);
             });
+    }
+
+    if (session) {
+        loadChatHistory();
     }
 
     function handleFormSubmit(animationInstance) {
@@ -675,16 +251,6 @@
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-
-    edited_title.addEventListener('blur', () => {
-        const newTitle = edited_title.value.trim();
-
-        if (newTitle) {
-            const sessionId = window.location.pathname.split('/').pop();
-            updateChatTitle(sessionId, newTitle);
-        }
-    });
-
     function updateChatTitle(sessionId, newTitle) {
         fetch('http://localhost:3000/chat/update-title', {
             method: 'POST',
@@ -708,6 +274,46 @@
                 console.error('Error updating title:', error);
             });
     }
+
+    function settingButtonClickHandler() {
+        if (settingsDropdown.classList.contains('expand-again')) {
+            settingsDropdown.classList.remove('expand-again');
+            settingsDropdown.classList.remove('show');
+        } else {
+            settingsDropdown.classList.add('expand-again');
+            settingsDropdown.classList.add('show');
+        }
+    }
+
+    settingsButton.addEventListener('click', settingButtonClickHandler);
+
+    function edit_title() {
+        const editTitleDropdown = document.getElementById('edit_title');
+        const overlay = document.getElementById('overlay');
+        const bodyContent = document.querySelector('body');
+
+        if (editTitleDropdown.classList.contains('show')) {
+            editTitleDropdown.classList.remove('show');
+            overlay.classList.remove('show');
+            bodyContent.classList.remove('blur-background');
+        } else {
+            editTitleDropdown.classList.add('show');
+            overlay.classList.add('show');
+            bodyContent.classList.add('blur-background');
+            settingsDropdown.classList.remove('expand-again');
+            settingsDropdown.classList.remove('show');
+            edited_title.focus();
+        }
+    }
+
+    edited_title.addEventListener('blur', () => {
+        const newTitle = edited_title.value.trim();
+
+        if (newTitle) {
+            const sessionId = window.location.pathname.split('/').pop();
+            updateChatTitle(sessionId, newTitle);
+        }
+    });
 </script>
 
 </html>
