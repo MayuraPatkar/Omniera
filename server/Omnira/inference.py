@@ -19,8 +19,12 @@ optimizer = torch.optim.Adam(model.parameters(), lr=config['lr'], eps=1e-9)
 model, initial_epoch, global_step = load_model(config, config['device'], model, optimizer)
 
 def inference(text):
-    idx = tokenizer.encode(text).ids
+    input_text = f"[SOS] [USER] {text} [BOT]"
+    idx = tokenizer.encode(input_text).ids
     idx = torch.tensor([idx]).to(config['device'])
-    generated_sequence = model.generate(idx, max_new_tokens=100, seq_len=config['seq_len'], temperature=config['temperature'], top_k=config['top_k'])
+    generated_sequence = model.generate(idx, max_new_tokens=50, seq_len=config['seq_len'], temperature=config['temperature'], top_k=config['top_k'])
     predicted_text = tokenizer.decode(generated_sequence[0].cpu().numpy())
-    return predicted_text
+    bot_token_index = predicted_text.find(text[-1]) + 1
+    response_tokens = predicted_text[bot_token_index:].strip()
+
+    return response_tokens

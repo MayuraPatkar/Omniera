@@ -39,7 +39,7 @@ router.post("/ai-response", upload.none(), async (req, res) => {
     }
 
     const { conversationTitle, prompt, chatSessionId } = req.body;
-    const pythonProcess = spawn('python', [path.join(__dirname, '../../server/M68/response.py'), JSON.stringify(prompt)]);
+    const pythonProcess = spawn('python', [path.join(__dirname, '../../server/Omnira/response.py'), JSON.stringify(prompt)]);
 
     let result = '';
 
