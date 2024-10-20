@@ -49,6 +49,7 @@
 
         .register-container h2 {
             margin-bottom: 20px;
+            font-size: 2.2rem;
         }
 
         .input-group {
@@ -83,11 +84,19 @@
 
         .input-group input:focus~label,
         .input-group input:not(:placeholder-shown)~label {
-            top: -20px;
+            top: -15px;
             left: 12px;
             font-size: 12px;
             color: #00aaff;
 
+        }
+
+        .error {
+            margin-top: 1px;
+            position: relative;
+            top: -10px;
+            color: red;
+            display: none;
         }
 
         .actions button {
@@ -129,8 +138,8 @@
 
         @media (max-width: 768px) {
             .register-container {
-                width: 90%;
-                padding: 30px;
+                width: 55vw;
+                padding: 20px;
             }
 
             .input-group input {
@@ -152,13 +161,16 @@
         }
 
         @media (max-width: 480px) {
+            body{
+                height: 90vh;
+            }
             .register-container {
-                width: 95%;
+                width: 75vw;
                 padding: 20px;
             }
 
             .register-container h2 {
-                font-size: 18px;
+                font-size: 2.2rem;
             }
 
             .input-group input {
@@ -172,27 +184,28 @@
     <div class="logo" onclick="window.location='/'"><img src="../assets/Logo.png" alt="logo"> </div>
     <div class="register-container">
         <h2>Signup</h2>
+        <p id="global-error" class="error"></p>
         <form id="signupForm" method="post">
             <div class="input-group">
-                <input type="text" id="name" required placeholder=" ">
-                <label for="username">Username</label>
-                <p id="name-error"></p>
+                <input type="text" id="name" placeholder=" ">
+                <label for="username">Name</label>
             </div>
+            <p id="name-error" class="error"></p>
             <div class="input-group">
-                <input type="email" id="email" required placeholder=" ">
+                <input type="email" id="email" placeholder=" ">
                 <label for="email">Email</label>
-                <p id="email-error"></p>
             </div>
+            <p id="email-error" class="error"></p>
             <div class="input-group">
-                <input type="password" id="password" required placeholder=" ">
+                <input type="password" id="password" placeholder=" ">
                 <label for="password">Password</label>
-                <p id="password-error"></p>
             </div>
+            <p id="password-error" class="error"></p>
             <div class="input-group">
-                <input type="password" id="confirmPassword" required placeholder=" ">
+                <input type="password" id="confirmPassword" placeholder=" ">
                 <label for="confirmPassword">Confirm Password</label>
-                <p id="confirm-error"></p>
             </div>
+            <p id="confirmPassword-error" class="error"></p>
             <div class="actions">
                 <button type="submit">Signup</button>
             </div>
@@ -216,7 +229,7 @@
             return false;
         }
         if (!patName.test(name)) {
-            showError("name", "Invalid name! Only letters and spaces are allowed.");
+            showError("name", "Invalid name!");
             return false;
         }
         clearError("name");
@@ -225,22 +238,24 @@
 
     function validateEmail() {
         const email = document.getElementById("email").value.trim();
-        const patEmail = /^(\w+([-+.]\w+)@\w+([-.]\w+)\.\w+([-.]\w+)*)$/;
+        const patEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (email === "") {
             showError("email", "Email is required.");
             return false;
         }
         if (!patEmail.test(email)) {
-            showError("email", "Email must end with @manipal.edu or a subdomain like @anything.manipal.edu");
+            showError("email", "Invalid email format.");
             return false;
         }
         clearError("email");
         return true;
     }
 
+
     function validatePassword() {
         const password = document.getElementById("password").value.trim();
-        const patPassword = /^((?=.[A-Z])(?=.[a-z])(?=.[0-9])(?=.[!@#$%^&*-+]).{8,})$/;
+        const patPassword = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*-+]).{8,}$/;
+
         if (password === "") {
             showError("password", "Password is required.");
             return false;
@@ -255,7 +270,7 @@
 
     function validateConfirmPassword() {
         const password = document.getElementById("password").value.trim();
-        const confirmPassword = document.getElementById("password1").value.trim();
+        const confirmPassword = document.getElementById("confirmPassword").value.trim();
         if (confirmPassword === "") {
             showError("confirmPassword", "Please confirm your password.");
             return false;
@@ -264,21 +279,32 @@
             showError("confirmPassword", "Passwords do not match!");
             return false;
         }
-        clearError("password1");
+        clearError("confirmPassword");
         return true;
     }
 
     function showError(id, msg) {
-        document.getElementById(`${id} - error`).innerHTML = msg;
+        document.getElementById(`${id}-error`).innerHTML = msg;
+        document.getElementById(`${id}-error`).style.display = 'block';
     }
 
     function clearError(id) {
-        document.getElementById(`${id} - error`).innerHTML = '';
+        document.getElementById(`${id}-error`).innerHTML = '';
+        document.getElementById(`${id}-error`).style.display = 'none';
     }
+
 </script>
 <script>
     document.getElementById("signupForm").addEventListener("submit", async function (event) {
         event.preventDefault();
+
+        const submitButton = document.querySelector(".actions button");
+        submitButton.disabled = true;
+
+        if (!validateName() || !validateEmail() || !validatePassword() || !validateConfirmPassword()) {
+            submitButton.disabled = false;
+            return;
+        }
 
         const name = document.getElementById("name").value;
         const email = document.getElementById("email").value;
@@ -301,12 +327,25 @@
 
             if (response.ok) {
                 window.location = '/';
+            } else {
+                const data = await response.json();
+                if (response.status === 400) {
+                    showError("global", "Invalid input data.");
+                } else if (response.status === 500) {
+                    showError("global", "Server error. Please try again later.");
+                } else {
+                    showError("email", data.message || "An error occurred.");
+                }
             }
+
         } catch (error) {
             console.error("Error:", error);
-            alert("An error occurred during sign-up.");
+            showError("global", "An error occurred during sign-up.");
         }
+        submitButton.disabled = false;
     });
+
 </script>
+
 
 </html>

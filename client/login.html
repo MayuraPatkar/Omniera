@@ -51,7 +51,7 @@
         .login-container h2 {
             margin-bottom: 20px;
             color: #ffffff;
-            font-size: 24px;
+            font-size: 2.2rem;
             font-weight: bold;
         }
 
@@ -93,6 +93,14 @@
             color: #00aaff;
         }
 
+        .error {
+            margin-top: 1px;
+            position: relative;
+            top: -10px;
+            color: red;
+            display: none;
+        }
+
         .actions button {
             width: 100%;
             padding: 12px;
@@ -131,7 +139,7 @@
 
         @media (max-width: 768px) {
             .login-container {
-                width: 90%;
+                width: 60%;
                 padding: 30px;
             }
 
@@ -154,13 +162,17 @@
         }
 
         @media (max-width: 480px) {
+            body {
+                height: 90vh;
+            }
+
             .login-container {
-                width: 95%;
+                width: 75%;
                 padding: 20px;
             }
 
             .login-container h2 {
-                font-size: 18px;
+                font-size: 2.2rem;
             }
 
             .input-group input {
@@ -171,18 +183,23 @@
 </head>
 
 <body>
-    <div class="logo" onclick="window.location='/'"><img src=" ../assets/Logo.png" alt="logo"></div>
+    <div class="logo" onclick="window.location='/'">
+        <img src="../assets/Logo.png" alt="logo">
+    </div>
     <div class="login-container">
         <h2>Login</h2>
+        <p id="global-error" class="error"></p>
         <form id="loginForm" method="post">
             <div class="input-group">
-                <input type="email" id="email" required placeholder=" ">
+                <input type="email" id="email" placeholder=" ">
                 <label for="email">Email</label>
             </div>
+            <p id="email-error" class="error"></p>
             <div class="input-group">
-                <input type="password" id="password" required placeholder=" ">
+                <input type="password" id="password" placeholder=" ">
                 <label for="password">Password</label>
             </div>
+            <p id="password-error" class="error"></p>
             <div class="actions">
                 <button type="submit">Login</button>
             </div>
@@ -192,41 +209,69 @@
         </div>
     </div>
 </body>
+
 <script>
     document.getElementById("email").addEventListener("input", validateEmail);
+    document.getElementById("password").addEventListener("input", validatePassword);
 
     function validateEmail() {
         const email = document.getElementById("email").value.trim();
-        const patEmail = /^(\w+([-+.]\w+)@\w+([-.]\w+)\.\w+([-.]\w+)*)$/;
+        const patEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
         if (email === "") {
             showError("email", "Email is required.");
             return false;
         }
+
         if (!patEmail.test(email)) {
-            showError("email", "Email must end with @manipal.edu or a subdomain like @anything.manipal.edu");
+            showError("email", "Invalid email format.");
             return false;
         }
+
         clearError("email");
         return true;
     }
 
+    function validatePassword() {
+        const password = document.getElementById("password").value.trim();
+        if (password === "") {
+            showError("password", "Password is required.");
+            return false;
+        }
+
+        clearError("password");
+        return true;
+    }
+
     function showError(id, msg) {
-        document.getElementById(`${id} - error`).innerHTML = msg;
+        document.getElementById(`${id}-error`).innerHTML = msg;
+        document.getElementById(`${id}-error`).style.display = 'block';
     }
 
     function clearError(id) {
-        document.getElementById(`${id} - error`).innerHTML = '';
+        document.getElementById(`${id}-error`).innerHTML = '';
+        document.getElementById(`${id}-error`).style.display = 'none';
     }
 </script>
+
 <script>
     document.getElementById("loginForm").addEventListener("submit", async function (event) {
         event.preventDefault();
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+
+        const submitButton = document.querySelector(".actions button");
+        submitButton.disabled = true;
+
+        const emailValid = validateEmail();
+        const passwordValid = validatePassword();
+
+        if (!emailValid || !passwordValid) {
+            submitButton.disabled = false;
+            return;
+        }
 
         const formData = {
-            email: email,
-            password: password
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
         };
 
         try {
@@ -241,13 +286,16 @@
             if (response.ok) {
                 window.location.href = "/";
             } else {
-                alert("Login failed! Check your credentials.");
+                showError("global", "Login failed! Check your credentials.");
             }
         } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred during login.");
+            showError("global", "An error occurred during login.");
         }
+
+        submitButton.disabled = false;
     });
 </script>
+
+
 
 </html>

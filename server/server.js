@@ -8,14 +8,12 @@ const PORT = process.env.PORT || 3000;
 const busEmitter = new EventEmitter();
 busEmitter.setMaxListeners(15);
 
-// Adding multiple listeners for 'exit' event
 for (let i = 0; i < 15; i++) {
   busEmitter.on('exit', () => {
     console.log('Exit listener', i + 1);
   });
 }
 
-// Setting up EJS as the template engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../client"));
 
@@ -33,8 +31,8 @@ mongoose.connect(DB_URI).then(() => {
 });
 
 // IMPORTED ROUTES
-const userRoutes = require("./routes/user"); // Importing user routes
-const chatRoutes = require("./routes/chat"); // Importing chat routes
+const userRoutes = require("./routes/user");
+const chatRoutes = require("./routes/chat");
 
 // ROUTES MIDDLEWARE
 app.use("/", userRoutes);
