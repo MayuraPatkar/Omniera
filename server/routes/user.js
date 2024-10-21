@@ -19,10 +19,10 @@ router.get("/", (req, res) => {
                     if (sessionString === user.session) {
                         res.sendFile(path.join(__dirname, '../../client/dashboard.html'));
                     } else {
-                        res.sendFile(path.join(__dirname, '../../client/landingpage.html'));
+                        res.sendFile(path.join(__dirname, '../../client/land.html'));
                     }
                 } else {
-                    res.sendFile(path.join(__dirname, '../../client/landingpage.html'));
+                    res.sendFile(path.join(__dirname, '../../client/land.html'));
                 }
             })
             .catch((err) => {

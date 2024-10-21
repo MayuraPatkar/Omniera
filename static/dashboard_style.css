@@ -55,17 +55,24 @@ body {
     object-fit: contain;
 }
 
-.dashboard {
-    margin: auto;
-    width: 90vw;
-    padding: 2.5%;
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
+.dashboard{
+    width: 100vw;
+}
+
+.dashboard_chats {
+    width: 98vw;
+    padding: 2%;
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 5%;
+    box-sizing: border-box;
+    grid-auto-rows: minmax(100px, auto);
     box-sizing: border-box;
 }
 
-.initdiv {
+.dashboard_init {
+    position: relative;
+    left: 200%;
     width: 80%;
     height: 70vh;
     display: flex;
@@ -79,7 +86,7 @@ body {
     font-family: 'Pixelify Sans', sans-serif;
 }
 
-.initdiv button {
+.dashboard_init button {
     background: linear-gradient(to left, #9EBBFF, #EDC83C);
     border: none;
     width: 20%;
@@ -92,7 +99,7 @@ body {
 }
 
 .chats {
-    width: 25%;
+    width: 100%;
     height: 30vh;
     background-color: #82a9cf;
     border-radius: 5px;
@@ -150,6 +157,7 @@ body {
     z-index: 1;
 }
 
+
 @media (max-width: 480px) {
     body {
         height: 90vh;
@@ -176,18 +184,15 @@ body {
     }
 
     .dashboard {
-        margin: auto;
-        width: 100vw;
-        font-size: 0.6em;
-        flex-direction: column;
-        justify-content: center;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        padding: 2.5%;
     }
 
-    .dashboard .initdiv {
+    .dashboard .dashboard_init {
         width: 100%;
     }
 
-    .dashboard .initdiv button {
+    .dashboard .dashboard_init button {
         width: 70%;
     }
 
