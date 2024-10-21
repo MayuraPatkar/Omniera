@@ -13,7 +13,7 @@
             width: 100vw;
             font-family: 'Pixelify Sans', sans-serif;
             background-color: #1B1840;
-            color: #ffffff;
+            color: goldenrod;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -54,8 +54,8 @@
         }
 
         button {
-            width: 20%;
-            height: 5%;
+            width: fit-content;
+            height: 6%;
             border: none;
             border-radius: 15px;
             margin-top: 20px;
@@ -64,19 +64,46 @@
             background: linear-gradient(to left, #9EBBFF, #EDC83C);
             cursor: pointer;
         }
+
+        @media screen and (max-width:780px) {
+        
+        #goto{
+            width:fit-content;
+            height: 6%;
+        }
+        
+    }
+        @media screen and (max-width:480px) {
+            .error span{
+                font-size: 5rem;
+            }
+            .error404{
+                font-size: 5rem;       
+            }
+            .logo_O {
+                height: 20%;
+                font-size: small;
+            }
+        }
+       
+
+
+            
+
+        
     </style>
 </head>
 
 <body>
     <div class="error404">
-        <span>4</span>
+        <span class="letter">4</span>
         <div class="logo_O" onclick="window.location = '/'"><img src="../assets/logo_O.png" alt="logo"></div>
-        <span>4</span>
+        <span class="letter">4</span>
     </div>
     <div class="error">
-        <span>error</span>
+        <span class="letter">error</span>
     </div>
-    <button onclick="window.location = '/'">Go back to the homepage</button>
+    <button id="goto" window.location = '/'">Go back to the homepage</button>
 
 </body>
 
