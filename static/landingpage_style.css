@@ -1,0 +1,391 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #12102c;
+    height: 100vh;
+    font-family: 'Pixelify Sans', sans-serif;
+    scroll-behavior: smooth;
+    background-image: radial-gradient(#372b677e, #16102c, #16102c);
+    overflow-x: hidden;
+    
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+header {
+    position: relative;
+    top: 0;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    padding: 2%;
+}
+
+.logo {
+    height: 70%;
+}
+
+.logo img {
+    height: 100%;
+    object-fit: contain;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.container-1 {
+    width: 100vw;
+    height: 55vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-1 .omnira_p_logo {
+    align-self: flex-start;
+}
+
+.container-1 .omnira_p_logo img{
+    height: 100%;
+    object-fit: contain;
+}
+.background-clip {
+    position: absolute;
+    top: 3%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+.container-2 {
+    width: 100vw;
+    height: 16vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+}
+
+.container-2 h2 {
+    width: 60%;
+    text-align: center;
+}
+
+.start_button {
+    width: 20%;
+    height: 60%;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 1.1em;
+    background: linear-gradient(to left, #9EBBFF, #EDC83C);
+    cursor: pointer;
+}
+
+.container-3 {
+    height: 100vh;
+    width: 100vw;
+    padding: 5%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+   
+}
+
+.main-title {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    color: white;
+    font-size: 3.5rem;
+  
+}
+
+.main-1 {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 25%;
+    border-radius: 30px;
+    background-color: #2c1d68;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    height: 100%;
+    box-shadow: 0px 10px 0px rgb(10, 10, 105);
+    border: 2px solid rgb(223, 223, 223);
+
+}
+
+
+.icon {
+    width: 40%;
+    height: 30%;
+   
+}
+
+.icon img {
+    height: 100%;
+    object-fit: contain;
+}
+
+.container-4 {
+    height: 100vh;
+    width: 100vw;
+    padding: 5%;
+    box-sizing: border-box;
+    background-color: #12102c;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-2{
+    height: 80%;
+    width: 90vw;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.elements {
+    flex-shrink: 0;
+    height: 30%;
+    width: 40%;
+    border: 2px solid rgb(223, 223, 223);
+    background-color: #2c1d68;
+    padding: 20px;
+    border-radius: 50px;
+    box-shadow: 0px 10px 0px rgb(10, 10, 105);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+
+.container-5 {
+    height: 100vh;
+    width: 100vw;
+    padding: 5%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+}
+
+.content-5 {
+    width: 75%;
+}
+
+.container-5 h3 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.container-5 ul {
+    width: 60%;
+    margin: 0 auto;
+    list-style-type: none;
+}
+
+.container-5 ul li {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #9EBBFF;
+    text-align: left;
+}
+
+footer {
+    width: 100vw;
+    height: 40vh;
+    background-color: #1c1c1c;
+    color: #fff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px 0;
+    position: relative;
+    
+}
+
+footer div {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+footer p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    transition: color 0.3s ease;
+}
+
+footer p a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer p a:hover {
+    color: #9EBBFF;
+}
+
+
+
+
+
+
+@media (max-width:768px){
+   
+    header{
+        padding: 5%;
+    }
+
+    header .logo{
+        height: 50%;
+    }
+
+    header a {
+        font-size: 1.1rem;
+    }
+
+    .container-1{
+        height: 40vh;
+    }
+
+    .container-1 .omnira_p_logo{
+        height: 15%;
+    }
+
+    .background-clip{
+        top: -10%;
+
+    }
+
+    .container-2 h2{
+        width: 80%;
+        font-size: 1.1rem;
+
+    }
+
+    .start_button {
+        width: 60%;
+        height: 60%;
+    }
+
+}
+
+@media (max-width:480px){
+   
+    header{
+        padding: 5%;
+    }
+
+    header .logo{
+        height: 50%;
+    }
+
+    header a {
+        font-size: 1.1rem;
+    }
+
+    .container-1{
+        height: 40vh;
+    }
+
+    .container-1 .omnira_p_logo{
+        height: 15%;
+    }
+
+    .background-clip{
+        top: -10%;
+
+    }
+
+    .container-2 h2{
+        width: 80%;
+        font-size: 1.1rem;
+
+    }
+
+    .start_button {
+        width: 60%;
+        height: 60%;
+    }
+
+    .container-3{
+        flex-direction: column;
+
+    }
+
+     .main-title{
+        font-size: 1.6rem;
+        text-align: center;
+    }
+    .main-1{
+        flex-direction: column;
+    }
+
+    .content{
+        height: 20%;
+        width: 80%  ;
+    }
+
+    .container-4{
+        padding: 2%;
+        height: 95vh;
+    }
+
+    .main-2{
+        width: 100%;
+        height: 90%;
+        
+    }
+
+    .elements{
+        width: 80%;
+        height: 15%;
+        font-size: 1.1rem;
+    }
+
+    .container-5 .content{
+        width: 90%;
+        height: 100%;
+        
+    }
+    
+
+
+
+
+}
+    
