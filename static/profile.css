@@ -115,7 +115,7 @@ header{
 @media screen and (max-width:780px) {
     header{
 
-        height: 15vh;
+        height: 13vh;
         width:80vw;
         padding: 5%;    
     }
@@ -142,6 +142,17 @@ header{
     .details div button{
         height: 30%;
         width: 60%;
+    }
+    .db:hover{
+        background-color: red;
+    
+    }
+    .bc:hover{
+        border-color:red;
+    }
+    
+    .fs:hover{
+        color:red;
     }
 
 }
@@ -178,6 +189,64 @@ header{
     .details div button{
         height: 30%;
         width: 60%;
+    }
+    .db:hover{
+        background-color: red;
+    
+    }
+    .bc:hover{
+        border-color:red;
+    }
+    
+    .fs:hover{
+        color:red;
+    }
+
+    
+}
+@media screen and (max-width:300px) {
+
+    header{
+        height: 10vh;
+        width:100vw;
+        padding: 5%;
+        
+
+    }
+    header .logo{
+        height: 90%;
+    }
+
+    .container h1{
+        font-size: 2.9rem;
+        height: 2%;
+        
+    }
+    .details{
+        width: 100vw;
+        height: 75vh;
+    }
+    .details div{
+        width: 70%;
+        height: 18%;
+        padding: 2%;
+        flex-direction: column;
+        
+    }
+    .details div button{
+        height: 30%;
+        width: 60%;
+    }
+    .db:hover{
+        background-color: red;
+    
+    }
+    .bc:hover{
+        border-color:red;
+    }
+    
+    .fs:hover{
+        color:red;
     }
 
     
