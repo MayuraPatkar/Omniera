@@ -280,6 +280,7 @@ footer p a:hover {
 
     .container-1{
         height: 40vh;
+
     }
 
     .container-1 .omnira_p_logo{
@@ -305,6 +306,7 @@ footer p a:hover {
 }
 
 @media (max-width:480px){
+
    
     header{
         padding: 5%;
@@ -382,6 +384,8 @@ footer p a:hover {
         height: 100%;
         
     }
+    
+
     
 
 
