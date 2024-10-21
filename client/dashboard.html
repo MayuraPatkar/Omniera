@@ -83,6 +83,7 @@
         <a href="/profile" class="profile-btn"><img src="../assets/user.png" alt="user_icon"></a>
     </div>
     <div class="dashboard">
+        <div class="dashboard_init"></div>
         <div class="dashboard_chats"></div>
     </div>
 
@@ -98,6 +99,7 @@
 
 <script>
     const dashboard = document.querySelector('.dashboard');
+    const dashboard_chats = document.querySelector('.dashboard_chats');
     let sessionIdToDelete;
     let chatDivToDelete;
 
@@ -107,6 +109,7 @@
             const data = await response.json();
 
             if (data.chats.length != 0) {
+                dashboard_chats.style.display = 'grid';
                 dashboard.innerHTML = '<div class="chats" onclick="window.location=\'/chat\'"><h2>New Conversation</h2><div class="new-1"></div><div class="new-2"></div></div>';
                 data.chats.forEach((chat) => {
                     const historyDiv = document.createElement('div');
@@ -135,7 +138,7 @@
                 });
 
             } else {
-                dashboard.innerHTML = '<div class="initdiv"><h1>Start your New conversation</h1><button onclick="window.location=\'/chat\'">Start</button></div>';
+                dashboard.innerHTML = '<div class="dashboard_init"><h1>Start your New conversation</h1><button onclick="window.location=\'/chat\'">Start</button></div>';
             }
         } catch (error) {
             console.error('Failed to fetch chat history:', error);
