@@ -10,7 +10,6 @@
     --textcolor--color:goldenrod;
     --fontstyle-font-family:'Pixelify Sans', sans-serif;
 }
-
 body {
     background-color: #12102c;
     height: 100vh;
@@ -25,8 +24,6 @@ header{
     padding: 2%;
     box-sizing: border-box;
 }
-
-
 .logo {
     height: 70%;
 }
@@ -56,8 +53,13 @@ header{
 .container h1 span{
   font-family: var(--fontstyle-font-family);
 }
+
+
 #tc{
     color:goldenrod;
+}
+#ta{
+    color: red;
 }
 
 #tc span{
@@ -106,6 +108,90 @@ header{
     font-family: 'Pixelify Sans', sans-serif;
 }
 
-@media screen and (max-width:780px) {}
 
-@media screen and (max-width:480px) {}
+
+
+
+@media screen and (max-width:780px) {
+    header{
+
+        height: 15vh;
+        width:80vw;
+        padding: 5%;    
+    }
+    header .logo{
+        height: 90%;
+    }
+
+    .container h1{
+        font-size: 2.9rem;
+        height: 2%;
+        
+    }
+    .details{
+        width: 100vw;
+        height: 75vh;
+    }
+    .details div{
+        width: 70%;
+        height: 18%;
+        padding: 2%;
+        flex-direction: column;
+        
+    }
+    .details div button{
+        height: 30%;
+        width: 60%;
+    }
+
+}
+
+@media screen and (max-width:480px) {
+
+    header{
+        height: 10vh;
+        width:100vw;
+        padding: 5%;
+        
+
+    }
+    header .logo{
+        height: 90%;
+    }
+
+    .container h1{
+        font-size: 2.9rem;
+        height: 2%;
+        
+    }
+    .details{
+        width: 100vw;
+        height: 75vh;
+    }
+    .details div{
+        width: 70%;
+        height: 18%;
+        padding: 2%;
+        flex-direction: column;
+        
+    }
+    .details div button{
+        height: 30%;
+        width: 60%;
+    }
+
+    
+}
+
+.db:hover{
+    background-color: red;
+
+}
+.bc:hover{
+    border-color:red;
+}
+
+.fs:hover{
+    color:red;
+}
+
