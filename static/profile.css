@@ -1,9 +1,6 @@
 * {
     margin: 0;
     padding: 0;
-
-
-
 }
 
 :root {
@@ -15,9 +12,6 @@ body {
     background-color: #12102c;
     height: 100vh;
     width: 100vw;
-
-
-
 }
 
 header {
@@ -78,7 +72,7 @@ header {
 }
 
 .details {
-    height:    80%;
+    height: 80%;
     width: 100%;
     display: flex;
     justify-content: space-evenly;
@@ -115,37 +109,142 @@ header {
     border-radius: 10px;
     border: none;
     font-size: 0.9rem;
+    padding: 1%;
     font-family: 'Pixelify Sans', sans-serif;
+    cursor: pointer;
 }
- 
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #2C3E50;
+    margin: auto;
+    padding: 1%;
+    color: white;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 300px;
+    height: 18vh;
+    text-align: center;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    font-family: 'Pixelify Sans', sans-serif;
+    margin: 7% 0;
+}
+
+.modal-content button {
+    background-color: #ffffff;
+    width: 40%;
+    color: rgb(0, 0, 0);
+    height: 20%;
+    border-radius: 4px;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-content #confirmDelete:hover {
+    background-color: rgb(255, 48, 48);
+}
+
+.modal2 {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content2 {
+    background-color: #2C3E50;
+    margin: auto;
+    padding: 1%;
+    color: white;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 300px;
+    height: 18vh;
+    text-align: center;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.modal-content2 p {
+    font-size: 1.2rem;
+    font-family: 'Pixelify Sans', sans-serif;
+    margin: 7% 0;
+}
+
+.modal-content2 button {
+    background-color: #ffffff;
+    width: 40%;
+    color: rgb(0, 0, 0);
+    height: 20%;
+    border-radius: 4px;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-content2 #confirmDelete2:hover {
+    background-color: rgb(255, 48, 48);
+}
 
 
-@media screen and (min-width:780px)
-{
+@media screen and (min-width:780px) {
 
     .details div button {
-     
+
         width: fit-content;
         height: 40%;
-     
+
 
     }
-    #lt{
+
+    #lt {
         font-family: var(--fontstyle-font-family);
         color: aqua;
     }
-    .fs{
-        color: aqua;
-    }
-    #clr{
+
+    .fs {
         color: aqua;
     }
 
-  
-    
-    
+    #clr {
+        color: aqua;
+    }
+
+
+
+
 }
-   
+
 
 
 @media screen and (max-width:780px) {
@@ -182,7 +281,7 @@ header {
     .details div button {
         height: 40%;
         width: fit-content;
-        margin-bottom: 50% ;
+        margin-bottom: 50%;
         padding: 2%;
 
     }
@@ -199,14 +298,17 @@ header {
     .fs:hover {
         color: red;
     }
-    #lt{
+
+    #lt {
         font-family: var(--fontstyle-font-family);
         color: aqua;
     }
-    .fs{
+
+    .fs {
         color: aqua;
     }
-    #clr{
+
+    #clr {
         color: aqua;
     }
 
@@ -250,7 +352,7 @@ header {
         width: 60%; */
         height: 40%;
         width: fit-content;
-        margin-bottom: 50% ;
+        margin-bottom: 50%;
         padding: 2%;
     }
 
@@ -266,14 +368,17 @@ header {
     .fs:hover {
         color: red;
     }
-    #lt{
+
+    #lt {
         font-family: var(--fontstyle-font-family);
         color: aqua;
     }
-    .fs{
+
+    .fs {
         color: aqua;
     }
-    #clr{
+
+    #clr {
         color: aqua;
     }
 
@@ -302,10 +407,11 @@ header {
 
 
     }
-    #tc{
+
+    #tc {
         padding-top: 20%;
         padding-left: 10%;
-        
+
     }
 
     .details {
@@ -338,14 +444,17 @@ header {
     .fs:hover {
         color: red;
     }
-    #lt{
+
+    #lt {
         font-family: var(--fontstyle-font-family);
         color: aqua;
     }
-    .fs{
+
+    .fs {
         color: aqua;
     }
-    #clr{
+
+    #clr {
         color: aqua;
     }
 
@@ -364,5 +473,3 @@ header {
 .fs:hover {
     color: red;
 }
-
-

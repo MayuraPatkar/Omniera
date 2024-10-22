@@ -44,15 +44,27 @@ router.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../../client/login.html'));
 });
 
-// GET '/profile'
-router.get('/profile', (req, res) => {
+
+// HANDLE '/profile'
+router.get('/profile', async (req, res) => {
     const sessionString = req.cookies.sessionToken;
     if (sessionString) {
-        res.render('profile', { session: sessionString });
+        try {
+            const user = await accounts.findOne({ session: sessionString });
+            if (user) {
+                res.render('profile', { session: sessionString, name: user.name, email: user.email });
+            } else {
+                res.redirect('/login');
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Server error');
+        }
     } else {
         res.redirect('/login');
     }
 });
+
 
 // Handle sign-up
 router.post('/signup', async (req, res) => {
