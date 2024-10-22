@@ -135,6 +135,14 @@
             text-decoration: underline;
         }
 
+        .show-password {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            cursor: pointer;
+        }
 
         @media (max-width: 768px) {
             .register-container {
@@ -161,9 +169,10 @@
         }
 
         @media (max-width: 480px) {
-            body{
+            body {
                 height: 90vh;
             }
+
             .register-container {
                 width: 75vw;
                 padding: 20px;
@@ -199,6 +208,7 @@
             <div class="input-group">
                 <input type="password" id="password" placeholder=" ">
                 <label for="password">Password</label>
+                <span class="show-password" onclick="togglePassword()">Show</span>
             </div>
             <p id="password-error" class="error"></p>
             <div class="input-group">
@@ -291,6 +301,19 @@
     function clearError(id) {
         document.getElementById(`${id}-error`).innerHTML = '';
         document.getElementById(`${id}-error`).style.display = 'none';
+    }
+
+    function togglePassword() {
+        var passwordInput = document.getElementById('password');
+        var showPasswordSpan = document.querySelector('.show-password');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            showPasswordSpan.textContent = 'Hide';
+        } else {
+            passwordInput.type = 'password';
+            showPasswordSpan.textContent = 'Show';
+        }
     }
 
 </script>

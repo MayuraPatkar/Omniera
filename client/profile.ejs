@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>
+        <%= name %>
+    </title>
     <link rel="stylesheet" href="../static/profile.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap">
 </head>
@@ -18,13 +20,16 @@
     </header>
     <div class="container">
         <h1 class="greeting"> <span>Hello!</span>
-            <spam class="ta"><%= name %></spam>
+            <spam class="ta">
+                <%= name %>
+            </spam>
         </h1>
 
         <div class="details">
             <P class="personal">
-            <h2 id="tc"><span>NAME</span>: <%= name %></P>
-                <P class="personal"><span>EMAIL</span>: <%= email %>
+            <h2 id="tc"><span>NAME</span>: <%= name %>
+                    </P>
+                    <P class="personal"><span>EMAIL</span>: <%= email %>
             </h2>
             </P>
             <div id="logout">
@@ -69,6 +74,7 @@
 
 
         <script>
+
             function showConfirmModal() {
                 document.getElementById("confirmModal").style.display = "flex";
             }
@@ -94,7 +100,7 @@
             };
             function clearData() {
 
-                fetch('https://7868ff61-3000.inc1.devtunnels.ms/chat/clear-data', {
+                fetch('https://17ndjjzq-3000.inc1.devtunnels.ms/chat/clear-data', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -113,7 +119,7 @@
 
 
             document.getElementById('logoutBtn').addEventListener('click', function () {
-                fetch('https://7868ff61-3000.inc1.devtunnels.ms/logout', {
+                fetch('https://17ndjjzq-3000.inc1.devtunnels.ms/logout', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -132,7 +138,7 @@
                     });
             });
             function deleteAccount() {
-                fetch('https://7868ff61-3000.inc1.devtunnels.ms/kill-account', {
+                fetch('https://17ndjjzq-3000.inc1.devtunnels.ms/kill-account', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

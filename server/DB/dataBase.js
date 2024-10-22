@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const databaseUrl = "mongodb://127.0.0.1:27017/test";
+const databaseUrl = "mongodb://127.0.0.1:27017/Omniera";
 
 mongoose.connect(databaseUrl, {
     useNewUrlParser: true,
