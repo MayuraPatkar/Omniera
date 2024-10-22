@@ -86,10 +86,11 @@ header a {
 
 .start_button {
     width: 20%;
-    height: 60%;
+    height: 70%;
     border: none;
     border-radius: 5px;
     margin-top: 20px;
+    padding: 1.5vh;
     font-family: 'Pixelify Sans', sans-serif;
     font-size: 1.1em;
     background: linear-gradient(to left, #9EBBFF, #EDC83C);
@@ -152,6 +153,31 @@ header a {
     object-fit: contain;
 }
 
+.icon-2 {
+    width: 40%;
+    height: 30%;
+
+}
+
+.icon-2 img{
+    height: 100%;
+    width: 70%;
+    object-fit: contain;
+
+}
+.icon-3 {
+    width: 40%;
+    height: 30%;
+
+}
+
+.icon-3 img{
+    height: 100%;
+    width: 90%;
+    object-fit: contain;
+
+}
+
 .container-4 {
     height: 100vh;
     width: 100vw;
@@ -187,6 +213,8 @@ header a {
     color: white;
     font-size: 1.5rem;
 }
+
+
 
 
 .container-5 {
@@ -260,10 +288,6 @@ footer p a:hover {
 }
 
 
-
-
-
-
 @media (max-width:768px){
    
     header{
@@ -288,7 +312,7 @@ footer p a:hover {
     }
 
     .background-clip{
-        top: -10%;
+        top: -5%;
 
     }
 
@@ -299,8 +323,64 @@ footer p a:hover {
     }
 
     .start_button {
-        width: 60%;
-        height: 60%;
+        width: 40%;
+        height: 30%;
+    }
+
+
+    .container-3{
+        flex-direction: column;
+
+    }
+
+    .main-title{
+        font-size: 2.6rem;
+        text-align: center;
+    }
+    .main-1{
+        justify-content: space-evenly;
+        flex-direction: column;
+        height: 80%;
+        
+    }
+
+    .content{
+        height: 35%;
+        width: 80% ;
+        font-size: 1rem;
+        
+        
+    }
+
+
+    .container-4{
+        padding: 2%;
+        height: 75vh;
+    }
+
+    .main-2{
+        width: 100%;
+        height: 90%;
+       
+        
+    }
+
+    .elements{
+        width: 80%;
+        height: 15%;
+        font-size: 1.6rem;
+    }
+
+    .container-5 .content{
+        width: 90%;
+        height: 100%;
+        font-size: 1.1rem;
+        
+    }
+
+    .container-5 .content li{
+        font-size: 1.1rem;
+        
     }
 
 }
@@ -321,7 +401,9 @@ footer p a:hover {
     }
 
     .container-1{
+        width: 100%;
         height: 40vh;
+        overflow-x: hidden;
     }
 
     .container-1 .omnira_p_logo{
@@ -352,6 +434,7 @@ footer p a:hover {
      .main-title{
         font-size: 1.6rem;
         text-align: center;
+        width: 100%;
     }
     .main-1{
         flex-direction: column;
@@ -384,12 +467,6 @@ footer p a:hover {
         height: 100%;
         
     }
-    
-
-    
-
-
-
 
 }
     
