@@ -33,10 +33,9 @@ body {
 .header h1 {
     flex-grow: 1;
     text-align: center;
-    margin: 0;
-    margin-right: 80px;
     font-size: 2.7em;
     font-family: 'Pixelify Sans', sans-serif;
+    text-align: center;
 }
 
 .profile-btn {
@@ -55,12 +54,9 @@ body {
     object-fit: contain;
 }
 
-.dashboard{
+.dashboard {
     width: 100vw;
     height: 80vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .dashboard .dashboard_init {
@@ -96,7 +92,10 @@ body {
     gap: 5%;
     box-sizing: border-box;
     grid-auto-rows: minmax(100px, auto);
-    box-sizing: border-box;
+}
+
+.newChat {
+    cursor: pointer;
 }
 
 .chats {
@@ -107,9 +106,18 @@ body {
     margin: 10px 10px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     font-family: 'Pixelify Sans', sans-serif;
+    padding: 2%;
+}
+
+.chats {
+    margin: 0;
+}
+
+.chats p {
+    margin: 0;
 }
 
 .bin-div {
@@ -136,28 +144,148 @@ body {
     width: 40%;
     height: 20%;
     background: linear-gradient(to left, #9EBBFF, #EDC83C);
-    border: 1px solid black;
+    border: 2px solid black;
     border-radius: 10px;
     cursor: pointer;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 1.3rem;
 }
 
 .new-1 {
     background-color: red;
     width: 3%;
-    height: 30%;
+    height: 25%;
     border-radius: 20px;
 }
 
 .new-2 {
     position: relative;
-    bottom: 18%;
+    bottom: 25%;
     background-color: red;
     width: 20%;
-    height: 5%;
+    height: 4%;
     border-radius: 20px;
     z-index: 1;
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #2C3E50;
+    margin: auto;
+    padding: 1%;
+    color: white;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 300px;
+    height: 18vh;
+    text-align: center;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
+.modal-content button {
+    background-color: #ffffff;
+    width: 40%;
+    color: rgb(0, 0, 0);
+    height: 20%;
+    border-radius: 4px;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-content #confirmDelete:hover {
+    background-color: rgb(255, 48, 48);
+}
+
+@media (max-width: 768px) {
+    body {
+        height: 90vh;
+    }
+
+    .header {
+        height: 10vh;
+        width: 100vw;
+    }
+
+    .logo {
+        height: 50%;
+    }
+
+    .header h1 {
+        font-size: 2.8rem;
+        width: 90%;
+        margin-right: 0px;
+        font-size: 1.3em;
+    }
+
+    .header .profile-btn {
+        height: 50%;
+    }
+
+    .dashboard {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+    .dashboard .dashboard_init {
+        width: 100%;
+    }
+
+    .dashboard .dashboard_init button {
+        width: 70%;
+    }
+
+    .new-1 {
+        width: 3%;
+        height: 25%;
+    }
+
+    .new-2 {
+        bottom: 25%;
+        width: 15%;
+        height: 5%;
+    }
+
+    .dashboard_chats {
+        width: 100vw;
+    }
+
+    .chats {
+        width: 80%;
+        height: 25vh;
+        margin: 10px 20px;
+    }
+
+    .chats h2 {
+        font-size: 1.2rem;
+    }
+
+    .bin-div {
+        width: 5%;
+        bottom: 52%;
+        left: 43%;
+    }
+}
 
 @media (max-width: 480px) {
     body {
@@ -184,27 +312,50 @@ body {
         height: 50%;
     }
 
-    .dashboard {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        padding: 2.5%;
-    }
-
     .dashboard .dashboard_init {
         width: 100%;
+    }
+
+    .dashboard_init h1 {
+        font-size: 2.5rem;
+        text-align: center;
     }
 
     .dashboard .dashboard_init button {
         width: 70%;
     }
 
+    .new-1 {
+        width: 2%;
+        height: 25%;
+    }
+
+    .new-2 {
+        bottom: 21%;
+        width: 12%;
+        height: 5%;
+    }
+
+    .dashboard_chats {
+        padding: 5%;
+        box-sizing: border-box;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
     .chats {
-        width: 80%;
-        height: 20vh;
-        margin: 10px 40px;
+        width: 90%;
+        height: 17vh;
+        margin: 10px 10px;
+    }
+
+    .chats button {
+        width: 30%;
+        font-size: 1rem;
+        padding: 1%;
     }
 
     .bin-div {
-        width: 6%;
+        width: 5%;
         bottom: 52%;
         left: 43%;
     }

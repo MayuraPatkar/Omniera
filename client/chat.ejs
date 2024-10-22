@@ -13,8 +13,8 @@
 <body>
     <div class="overlay" id="overlay" onclick="edit_title()"></div>
     <div class="header">
-        <div class="logo" onclick="window.location = '/'">
-            <img src="./../assets/Logo.png" alt="logo">
+        <div class="logo">
+            <img src="./../assets/Logo.png" alt="logo" onclick="window.location = '/'">
         </div>
         <input type="text" class="title" id="title" value="New Chat" autocomplete="off" readonly="true">
         <div class="settings" id="settings">
@@ -22,13 +22,14 @@
         </div>
     </div>
     <div class="settings-buttton" id="settings-buttton">
-        <button class="setting-button" id="edit_title_btn" onclick="edit_title()">Edit title</button>
+        <button class="setting-button" id="edit_title_btn" onclick="edit_title()">Change title</button>
         <button class="setting-button" id="go_back" onclick="window.location='/'">Go Back</button>
     </div>
-    <div class="background_blur"></div>
+    <!-- <div class="background_blur"></div> -->
     <div class="edit_title" id="edit_title">
-        <label>Edit Title</label>
-        <input type="text" id="edited_title">
+        <label>Change Title</label>
+        <input type="text" id="edited_title" placeholder="Enter new title">
+        <button id="edited_title_button">Change</button>
     </div>
 
     <div class="chat-container">
@@ -193,7 +194,7 @@
 
     function sendPrompt(formData, animationInstance) {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://17ndjjzq-3000.inc1.devtunnels.ms/chat/ai-response/');
+        xhr.open('POST', 'https://7868ff61-3000.inc1.devtunnels.ms/chat/ai-response/');
 
         xhr.onload = function () {
             if (xhr.status === 200) {
@@ -252,7 +253,7 @@
     }
 
     function updateChatTitle(sessionId, newTitle) {
-        fetch('https://17ndjjzq-3000.inc1.devtunnels.ms/chat/update-title', {
+        fetch('https://7868ff61-3000.inc1.devtunnels.ms/chat/update-title', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -314,6 +315,16 @@
             edited_title.focus();
         }
     }
+
+    edited_title_button.addEventListener('click', () => {
+        const newTitle = edited_title.value.trim();
+
+        if (newTitle) {
+            const sessionId = window.location.pathname.split('/').pop();
+            updateChatTitle(sessionId, newTitle);
+            edit_title()
+        }
+    });
 
     edited_title.addEventListener('blur', () => {
         const newTitle = edited_title.value.trim();

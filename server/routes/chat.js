@@ -296,7 +296,7 @@ router.post('/clear-data', async (req, res) => {
     }
 
     try {
-        const user = await accounts.findOneAndDelete({ session: sessionString });
+        const user = await accounts.findOne({ session: sessionString });
 
         if (!user) {
             return res.status(404).json({ status: "error", message: "user session not found" });

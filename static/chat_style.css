@@ -23,6 +23,7 @@ body {
 
 .logo {
     height: 70%;
+    width: 10%;
 }
 
 .logo img {
@@ -31,20 +32,16 @@ body {
 }
 
 .header .title {
-    font-family: "Roboto", sans-serif;
     background: none;
-    width: fit-content;
     border: none;
     font-size: 2.3rem;
     text-align: center;
     color: white;
-    margin: auto;
-    margin-left: 25%;
     font-family: 'Pixelify Sans', sans-serif;
 }
 
 .settings {
-    width: 40px;
+    width: 10%;
     height: 40px;
     border-radius: 7px;
     display: flex;
@@ -144,14 +141,28 @@ body {
 .edit_title label {
     color: white;
     font-size: 1.9rem;
+    font-family: 'Pixelify Sans', sans-serif;
+
 }
 
 .edit_title input[type="text"] {
     width: 80%;
-    height: 30%;
+    height: 20%;
     border: 2px solid white;
     font-size: 1.7rem;
     padding: 1%;
+}
+
+.edit_title button {
+    background-color: #ffffff;
+    width: 40%;
+    color: rgb(0, 0, 0);
+    height: 20%;
+    border-radius: 4px;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
 }
 
 .edit_title.show {
@@ -272,7 +283,7 @@ input[type="text"] {
 
 .send-btn {
     position: relative;
-    width: 10%;
+    width: 15%;
     height: 80%;
     background-color: #7614fe;
     color: white;
@@ -310,31 +321,75 @@ input[type="text"] {
 }
 
 @media (max-width: 768px) {
-    .chat-box {
-        width: 90vw;
+    body {
+        height: 100vh;
     }
 
-    input[type="text"] {
-        width: 60%;
+    .header {
+        height: 10vh;
+        width: 100vw;
     }
 
-    .send-btn {
-        width: 15%;
-        font-size: 0.8rem;
+    .logo {
+        height: 60%;
     }
 
     .header .title {
-        font-size: 1.5rem;
-        margin-left: -20px;
+        font-size: 2.3rem;
+    }
+
+    .settings {
+        height: 55%;
+    }
+
+    .edit_title {
+        left: 25%;
+        width: 50vw;
+        height: 20vh;
+    }
+
+    .chat-box {
+        width: 100vw;
+        padding: 5%;
+
+    }
+
+    .user-message {
+        font-size: 1.1rem;
+    }
+
+    .ai-message {
+        font-size: 1.1rem;
+    }
+
+    .chat-box p span {
+        display: block;
+    }
+
+    #chat-input {
+        width: 95vw;
+        height: 80%;
+    }
+
+    input[type="text"] {
+        width: 50%;
+        font-size: 1rem;
+    }
+
+    .send-btn {
+        width: 20%;
+        font-size: 0.7rem;
     }
 
     .logo_O {
-        width: 15%;
-        height: 15%;
+        width: 10%;
+        height: 10%;
+        top: 25%;
     }
 
-    .settings img {
-        height: 70%;
+    .chat-box .mp {
+        top: 25%;
+        font-size: 1.5rem;
     }
 }
 
@@ -348,13 +403,13 @@ input[type="text"] {
         width: 100vw;
     }
 
-    .header .title {
-        font-size: 1.3rem;
-        width: 70%
-    }
-
     .logo {
         height: 50%;
+    }
+
+    .header .title {
+        font-size: 1.5rem;
+        width: 70%
     }
 
     .edit_title {
@@ -394,10 +449,6 @@ input[type="text"] {
     .send-btn {
         width: 20%;
         font-size: 0.7rem;
-    }
-
-    .header .title {
-        font-size: 1.2rem;
     }
 
     .logo_O {
