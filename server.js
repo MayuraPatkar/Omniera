@@ -31,8 +31,8 @@ mongoose.connect(DB_URI).then(() => {
 });
 
 // IMPORTED ROUTES
-const userRoutes = require("./routes/user");
-const chatRoutes = require("./routes/chat");
+const userRoutes = require("./server/routes/user");
+const chatRoutes = require("./server/routes/chat");
 
 // ROUTES MIDDLEWARE
 app.use("/", userRoutes);

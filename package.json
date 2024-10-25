@@ -10,6 +10,6 @@
     "uuid": "^10.0.0"
   },
   "scripts": {
-    "start": "nodemon server/server.js"
+    "start": "nodemon server.js"
   }
 }
