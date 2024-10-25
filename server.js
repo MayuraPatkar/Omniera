@@ -15,7 +15,7 @@ for (let i = 0; i < 15; i++) {
 }
 
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../client"));
+app.set("views", path.join(__dirname, "./client"));
 
 // DATABASE CONNECTION
 const DB_URI = 'mongodb+srv://mayurpatkar68:U5SD1fuLctdYrEup@cluster0.zlnie.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
