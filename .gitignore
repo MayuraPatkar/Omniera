@@ -2,3 +2,4 @@
 *.pt
 __pycache__
 node_modules
+pakage-lock.json
