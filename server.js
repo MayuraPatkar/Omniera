@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const app = require('./app');
 const { EventEmitter } = require('events');
 const path = require("path");
+
+require('dotenv').config();
+
 const PORT = process.env.PORT || 3000;
+const DB_URI = process.env.DB_URI;
 
 const busEmitter = new EventEmitter();
 busEmitter.setMaxListeners(15);
@@ -18,7 +22,6 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "./client"));
 
 // DATABASE CONNECTION
-const DB_URI = 'mongodb+srv://mayurpatkar68:U5SD1fuLctdYrEup@cluster0.zlnie.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 mongoose.connect(DB_URI).then(() => {
     console.log('Database connected successfully');
 
@@ -42,6 +45,6 @@ app.use('/static', express.static('static'));
 
 // 404
 app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, '../client/404.html'));
+    res.status(404).sendFile(path.join(__dirname, './client/404.html'));
 });
 
