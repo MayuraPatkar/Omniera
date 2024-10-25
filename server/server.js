@@ -18,7 +18,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../client"));
 
 // DATABASE CONNECTION
-const DB_URI = 'mongodb://127.0.0.1:27017/Omniera';
+const DB_URI = 'mongodb+srv://mayurpatkar68:U5SD1fuLctdYrEup@cluster0.zlnie.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 mongoose.connect(DB_URI).then(() => {
     console.log('Database connected successfully');
 

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const databaseUrl = "mongodb://127.0.0.1:27017/Omniera";
+const databaseUrl = "mongodb+srv://mayurpatkar68:U5SD1fuLctdYrEup@cluster0.zlnie.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 mongoose.connect(databaseUrl, {
     useNewUrlParser: true,
